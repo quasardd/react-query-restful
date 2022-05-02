@@ -1,4 +1,4 @@
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery } from "react-query";
 import { buildUrl, useQueryContext } from "..";
 import { IQuery } from "./types";
@@ -22,7 +22,7 @@ const Query = ({
       });
 
       if (cacheResponse) {
-        // await AsyncStorage.setItem(cacheResponse.key, response.data);
+        await AsyncStorage.setItem(cacheResponse.key, response.data);
       }
 
       return response.data;

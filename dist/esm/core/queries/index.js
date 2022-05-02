@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery } from "react-query";
 import { buildUrl, useQueryContext } from "..";
 const Query = ({ params, appendToUrl, path, options, cacheResponse, }) => {
@@ -19,7 +19,7 @@ const Query = ({ params, appendToUrl, path, options, cacheResponse, }) => {
                 url: buildUrl(path, appendToUrl),
             });
             if (cacheResponse) {
-                // await AsyncStorage.setItem(cacheResponse.key, response.data);
+                yield AsyncStorage.setItem(cacheResponse.key, response.data);
             }
             return response.data;
         }) }, options));

@@ -18,7 +18,7 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { curry } from "lodash";
 import { useMutation, useQueryClient } from "react-query";
 import { buildUrl, useQueryContext } from "..";
@@ -34,7 +34,7 @@ const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, })
             url: buildUrl(path, variables === null || variables === void 0 ? void 0 : variables.appendToUrl),
         });
         if (cacheResponse) {
-            // await AsyncStorage.setItem(cacheResponse.key, response.data);
+            yield AsyncStorage.setItem(cacheResponse.key, response.data);
         }
         return response.data;
     }), Object.assign({ onSuccess: (data, variables, context) => {

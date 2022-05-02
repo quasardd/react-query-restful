@@ -8,9 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.buildQuery = void 0;
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+const async_storage_1 = __importDefault(require("@react-native-async-storage/async-storage"));
 const react_query_1 = require("react-query");
 const __1 = require("..");
 const Query = ({ params, appendToUrl, path, options, cacheResponse, }) => {
@@ -22,7 +25,7 @@ const Query = ({ params, appendToUrl, path, options, cacheResponse, }) => {
                 url: (0, __1.buildUrl)(path, appendToUrl),
             });
             if (cacheResponse) {
-                // await AsyncStorage.setItem(cacheResponse.key, response.data);
+                yield async_storage_1.default.setItem(cacheResponse.key, response.data);
             }
             return response.data;
         }) }, options));

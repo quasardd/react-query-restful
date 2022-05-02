@@ -19,9 +19,12 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteMutation = exports.replaceMutation = exports.updateMutation = exports.createMutation = void 0;
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+const async_storage_1 = __importDefault(require("@react-native-async-storage/async-storage"));
 const lodash_1 = require("lodash");
 const react_query_1 = require("react-query");
 const __1 = require("..");
@@ -37,7 +40,7 @@ const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, })
             url: (0, __1.buildUrl)(path, variables === null || variables === void 0 ? void 0 : variables.appendToUrl),
         });
         if (cacheResponse) {
-            // await AsyncStorage.setItem(cacheResponse.key, response.data);
+            yield async_storage_1.default.setItem(cacheResponse.key, response.data);
         }
         return response.data;
     }), Object.assign({ onSuccess: (data, variables, context) => {
