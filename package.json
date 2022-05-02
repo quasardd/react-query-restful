@@ -1,0 +1,22 @@
+{
+  "name": "react-query-boilerplate",
+  "version": "0.1.0",
+  "description": "Boilerplate for React Query",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "Caio Henrique <chcp.caio@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.17.3",
+    "axios": "^0.27.2",
+    "lodash": "^4.17.21",
+    "react": "^18.1.0",
+    "react-query": "^3.38.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.4",
+    "@types/react": "18.0.8",
+    "@types/lodash": "^4.14.182"
+  }
+}
