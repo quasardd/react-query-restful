@@ -4,7 +4,7 @@
     "target": "es2015",
     "declaration": true,
     "outDir": "./dist",
-    "jsx": "preserve",
+    "jsx": "react",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
