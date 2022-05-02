@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -19,25 +18,23 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteMutation = exports.replaceMutation = exports.updateMutation = exports.createMutation = void 0;
-const async_storage_1 = require("@react-native-async-storage/async-storage");
-const lodash_1 = require("lodash");
-const react_query_1 = require("react-query");
-const __1 = require("..");
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { curry } from "lodash";
+import { useMutation, useQueryClient } from "react-query";
+import { buildUrl, useQueryContext } from "..";
 const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, }) => {
-    const { axios } = (0, __1.useQueryContext)();
-    const queryClient = (0, react_query_1.useQueryClient)();
+    const { axios } = useQueryContext();
+    const queryClient = useQueryClient();
     const _a = options || {}, { onSuccess } = _a, restOptions = __rest(_a, ["onSuccess"]);
-    return (0, react_query_1.useMutation)((variables) => __awaiter(void 0, void 0, void 0, function* () {
+    return useMutation((variables) => __awaiter(void 0, void 0, void 0, function* () {
         const method = getMethodFromOperation(operation);
         const response = yield axios.request({
             method,
             data: variables === null || variables === void 0 ? void 0 : variables.data,
-            url: (0, __1.buildUrl)(path, variables === null || variables === void 0 ? void 0 : variables.appendToUrl),
+            url: buildUrl(path, variables === null || variables === void 0 ? void 0 : variables.appendToUrl),
         });
         if (cacheResponse) {
-            yield async_storage_1.default.setItem(cacheResponse.key, response.data);
+            yield AsyncStorage.setItem(cacheResponse.key, response.data);
         }
         return response.data;
     }), Object.assign({ onSuccess: (data, variables, context) => {
@@ -59,10 +56,10 @@ function buildMutation(operation, config) {
         return Mutation(Object.assign(Object.assign(Object.assign({}, config), { operation }), overrideConfig));
     };
 }
-exports.createMutation = (0, lodash_1.curry)(buildMutation)("CREATE");
-exports.updateMutation = (0, lodash_1.curry)(buildMutation)("UPDATE");
-exports.replaceMutation = (0, lodash_1.curry)(buildMutation)("REPLACE");
-exports.deleteMutation = (0, lodash_1.curry)(buildMutation)("DELETE");
+export const createMutation = curry(buildMutation)("CREATE");
+export const updateMutation = curry(buildMutation)("UPDATE");
+export const replaceMutation = curry(buildMutation)("REPLACE");
+export const deleteMutation = curry(buildMutation)("DELETE");
 function getMethodFromOperation(operation) {
     switch (operation) {
         case "CREATE":

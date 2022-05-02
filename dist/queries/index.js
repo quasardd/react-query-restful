@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,28 +7,25 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildQuery = void 0;
-const async_storage_1 = require("@react-native-async-storage/async-storage");
-const react_query_1 = require("react-query");
-const __1 = require("..");
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useQuery } from "react-query";
+import { buildUrl, useQueryContext } from "..";
 const Query = ({ params, appendToUrl, path, options, cacheResponse, }) => {
-    const { axios } = (0, __1.useQueryContext)();
-    return (0, react_query_1.useQuery)(Object.assign({ queryKey: [path, appendToUrl, params], queryFn: () => __awaiter(void 0, void 0, void 0, function* () {
+    const { axios } = useQueryContext();
+    return useQuery(Object.assign({ queryKey: [path, appendToUrl, params], queryFn: () => __awaiter(void 0, void 0, void 0, function* () {
             const response = yield axios.request({
                 method: "GET",
                 params,
-                url: (0, __1.buildUrl)(path, appendToUrl),
+                url: buildUrl(path, appendToUrl),
             });
             if (cacheResponse) {
-                yield async_storage_1.default.setItem(cacheResponse.key, response.data);
+                yield AsyncStorage.setItem(cacheResponse.key, response.data);
             }
             return response.data;
         }) }, options));
 };
-function buildQuery(config) {
+export function buildQuery(config) {
     return function (data) {
         return Query(Object.assign(Object.assign({}, config), data));
     };
 }
-exports.buildQuery = buildQuery;

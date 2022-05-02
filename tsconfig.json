@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "esnext",
     "target": "es2015",
     "declaration": true,
     "outDir": "./dist",
     "jsx": "preserve",
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "moduleResolution": "node"
   },
   "include": ["src/**/*"]
 }

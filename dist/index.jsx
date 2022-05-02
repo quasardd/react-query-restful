@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildUrl = exports.useQueryContext = exports.BoilerplateQueryProvider = void 0;
-const react_1 = require("react");
-const react_query_1 = require("react-query");
-const axios_1 = require("axios");
-const QueryContext = (0, react_1.createContext)({});
-const queryClient = new react_query_1.QueryClient();
-const BoilerplateQueryProvider = ({ children, baseUrl, requestInterceptor }) => {
-    const axios = (0, react_1.useMemo)(() => {
-        const axios = axios_1.default.create({
+import { createContext, useMemo, useContext } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import Axios from "axios";
+const QueryContext = createContext({});
+const queryClient = new QueryClient();
+export const BoilerplateQueryProvider = ({ children, baseUrl, requestInterceptor }) => {
+    const axios = useMemo(() => {
+        const axios = Axios.create({
             baseURL: baseUrl,
             timeout: 30 * 1000,
         });
@@ -17,21 +14,18 @@ const BoilerplateQueryProvider = ({ children, baseUrl, requestInterceptor }) => 
         }
         return axios;
     }, [baseUrl, requestInterceptor]);
-    return (<react_query_1.QueryClientProvider client={queryClient}>
+    return (<QueryClientProvider client={queryClient}>
       <QueryContext.Provider value={{ axios }}>
         {children}
       </QueryContext.Provider>
-    </react_query_1.QueryClientProvider>);
+    </QueryClientProvider>);
 };
-exports.BoilerplateQueryProvider = BoilerplateQueryProvider;
-const useQueryContext = () => {
-    return (0, react_1.useContext)(QueryContext);
+export const useQueryContext = () => {
+    return useContext(QueryContext);
 };
-exports.useQueryContext = useQueryContext;
-function buildUrl(path, append) {
+export function buildUrl(path, append) {
     if (append) {
         return `${path}/${append}`;
     }
     return path;
 }
-exports.buildUrl = buildUrl;
