@@ -4,7 +4,6 @@
   "description": "Boilerplate for React Query",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
-  "types": "dist/index.d.ts",
   "author": "Caio Henrique <chcp.caio@gmail.com>",
   "license": "MIT",
   "private": false,
