@@ -1,14 +1,19 @@
 {
   "compilerOptions": {
-    "module": "esnext",
-    "target": "es2015",
+    "allowSyntheticDefaultImports": true,
+    "module": "es2015",
+    "esModuleInterop": true,
+    "target": "es6",
+    "lib": ["es5", "es2015", "es2016", "dom", "esnext"],
+    "types": ["node"],
     "declaration": true,
-    "outDir": "./dist",
+    "outDir": "./dist/esm",
     "jsx": "react",
-    "allowJs": true,
-    "skipLibCheck": true,
     "strict": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "sourceMap": true
   },
   "include": ["src/**/*"]
 }
