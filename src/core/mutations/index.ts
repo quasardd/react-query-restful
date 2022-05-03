@@ -16,7 +16,7 @@ const Mutation = ({
   options,
   cacheResponse,
 }: IMutation) => {
-  const { axios } = useRestContext();
+  const { axios, autoInvalidation } = useRestContext();
   const queryClient = useQueryClient();
 
   const { onSuccess, ...restOptions } = options || {};
@@ -39,12 +39,12 @@ const Mutation = ({
     },
     {
       onSuccess: (data, variables, context) => {
-        queryClient.invalidateQueries(path);
-        queryClient.invalidateQueries(path);
+        if (autoInvalidation) {
+          queryClient.invalidateQueries(path);
+        }
 
         if (invalidatePaths) {
           invalidatePaths.forEach((v) => {
-            queryClient.invalidateQueries(v);
             queryClient.invalidateQueries(v);
           });
         }

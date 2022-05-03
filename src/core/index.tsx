@@ -12,7 +12,14 @@ const RestContext = createContext({} as IRestContext);
 
 export const RestClientProvider: React.FC<
   PropsWithChildren<IRestClientProviderProps>
-> = ({ children, baseUrl, requestInterceptor, clientConfig, axiosConfig }) => {
+> = ({
+  children,
+  baseUrl,
+  requestInterceptor,
+  clientConfig,
+  axiosConfig,
+  autoInvalidation = true,
+}) => {
   const queryClient = useMemo(
     () => new QueryClient(clientConfig),
     [clientConfig]
@@ -35,8 +42,9 @@ export const RestClientProvider: React.FC<
   const contextValues = useMemo(
     () => ({
       axios,
+      autoInvalidation,
     }),
-    [axios]
+    [axios, autoInvalidation]
   );
 
   return (

@@ -3,6 +3,7 @@ import { QueryClientConfig } from "react-query";
 
 export interface IRestContext {
   axios: AxiosInstance;
+  autoInvalidation?: boolean;
 }
 
 export interface IRestClientProviderProps {
@@ -12,4 +13,5 @@ export interface IRestClientProviderProps {
   ) => Promise<AxiosRequestConfig<any>>;
   axiosConfig?: AxiosRequestConfig<any>;
   clientConfig?: QueryClientConfig | undefined;
+  autoInvalidation?: boolean;
 }
