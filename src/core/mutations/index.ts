@@ -62,9 +62,8 @@ function buildMutation(
   operation: IOperationsMutations,
   config: IBuildMutation
 ) {
-  return function (overrideConfig?: Partial<IBuildMutation>) {
-    return Mutation({ ...config, operation, ...overrideConfig });
-  };
+  return (overrideConfig?: Partial<IBuildMutation>) =>
+    Mutation({ ...config, operation, ...overrideConfig });
 }
 
 export const createMutation = curry(buildMutation)("CREATE");
@@ -74,13 +73,14 @@ export const deleteMutation = curry(buildMutation)("DELETE");
 
 function getMethodFromOperation(operation: IOperationsMutations) {
   switch (operation) {
-    case "CREATE":
-      return "POST";
     case "UPDATE":
       return "PATCH";
     case "REPLACE":
       return "PUT";
     case "DELETE":
       return "DELETE";
+    case "CREATE":
+    default:
+      return "POST";
   }
 }

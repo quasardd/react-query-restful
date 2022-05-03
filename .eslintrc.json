@@ -1,0 +1,47 @@
+{
+  "env": {
+    "node": true
+  },
+  "plugins": ["unicorn", "promise"],
+  "extends": [
+    "airbnb",
+    "airbnb-typescript",
+    "airbnb/hooks",
+    "prettier",
+    "plugin:unicorn/recommended",
+    "plugin:promise/recommended"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    // https://basarat.gitbooks.io/typescript/docs/tips/defaultIsBad.html
+    "import/prefer-default-export": "off",
+
+    // Use function hoisting to improve code readability
+    "no-use-before-define": [
+      "error",
+      { "functions": false, "classes": true, "variables": true }
+    ],
+    "@typescript-eslint/no-use-before-define": [
+      "error",
+      { "functions": false, "classes": true, "variables": true }
+    ],
+
+    "no-prototype-builtins": "off",
+
+    "react/destructuring-assignment": "off",
+    "react/jsx-filename-extension": "off",
+    "react/function-component-definition": "off",
+    "react/style-prop-object": "off",
+    "react/jsx-props-no-spreading": "off",
+
+    "unicorn/prevent-abbreviations": "off",
+    "unicorn/no-array-for-each": "off",
+    "unicorn/prefer-module": "off",
+    "unicorn/no-array-reduce": "off",
+    "unicorn/prefer-object-from-entries": "off",
+
+    "no-param-reassign": "off"
+  }
+}

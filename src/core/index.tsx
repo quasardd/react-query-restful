@@ -16,36 +16,42 @@ const QueryContext = createContext({} as IBoilerplateQueryContext);
 export const BoilerplateQueryProvider: React.FC<
   PropsWithChildren<IBoilerplateQueryProviderProps>
 > = ({ children, baseUrl, requestInterceptor, clientConfig, axiosConfig }) => {
-  const queryClient = useMemo(() => {
-    return new QueryClient(clientConfig);
-  }, [clientConfig]);
+  const queryClient = useMemo(
+    () => new QueryClient(clientConfig),
+    [clientConfig]
+  );
 
   const axios = useMemo(() => {
-    const axios = Axios.create({
+    const instance = Axios.create({
       baseURL: baseUrl,
       timeout: 30 * 1000,
       ...axiosConfig,
     });
 
     if (requestInterceptor) {
-      axios.interceptors.request.use(requestInterceptor);
+      instance.interceptors.request.use(requestInterceptor);
     }
 
-    return axios;
+    return instance;
   }, [baseUrl, requestInterceptor, axiosConfig]);
+
+  const contextValues = useMemo(
+    () => ({
+      axios,
+    }),
+    [axios]
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
-      <QueryContext.Provider value={{ axios }}>
+      <QueryContext.Provider value={contextValues}>
         {children}
       </QueryContext.Provider>
     </QueryClientProvider>
   );
 };
 
-export const useQueryContext = () => {
-  return useContext(QueryContext);
-};
+export const useQueryContext = () => useContext(QueryContext);
 
 export function buildUrl(path: string, append?: string | number) {
   if (append) {

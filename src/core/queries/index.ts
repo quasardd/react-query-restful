@@ -32,7 +32,5 @@ const Query = ({
 };
 
 export function buildQuery(config: Omit<IQuery, "params" | "id">) {
-  return function (data?: Partial<IQuery>) {
-    return Query({ ...config, ...data });
-  };
+  return (data?: Partial<IQuery>) => Query({ ...config, ...data });
 }
