@@ -1,6 +1,6 @@
-# React Query REST Boilerplate
+# REST React Query
 
-`react-query-rest-boilerplate` é apenas uma pequena coleção de funções que facilita a integração do React Query a uma REST API.
+`rest-react-query` is just a small collection of hooks that make it easy to integrate React Query into a REST API.
 
 ### Installing
 
@@ -9,36 +9,72 @@ Install with npm or yarn
 npm:
 
 ```
-npm i --save react-query-rest-boilerplate
+npm i --save rest-react-query
 ```
 
 yarn
 
 ```
-yarn add react-query-rest-boilerplate
+yarn add rest-react-query
 ```
 
-## Usage
+## Inicialization
 
 ```ts
-import {
-  BoilerplateQueryProvider,
-  getSimpleJwtAuth,
-  buildQuery,
-} from "react-query-boilerplate";
+import { RestClientProvider } from "rest-react-query";
 
 export default function App() {
   return (
-    <BoilerplateQueryProvider
-      baseUrl="http://localhost:3000/api/"
-      {...getSimpleJwtAuth("user", "data.user.accessToken")}
-    >
+    <RestClientProvider baseUrl="http://localhost:3000/api/">
       <Example />
-    </BoilerplateQueryProvider>
+    </RestClientProvider>
   );
 }
+```
+
+## Query Usage
+
+```ts
+import { buildQuery } from "rest-react-query";
 
 export const getUsersQuery = buildQuery({ path: "users" });
+
+function Example() {
+  // GET http://localhost:3000/api/users
+  const { isLoading, error, data } = getUsersQuery();
+
+  // OR GET http://localhost:3000/api/users/1/vehicles?page=1
+  /* const { isLoading, error, data } = getUsersQuery({
+    appendToUrl: "1/vehicles",
+    params: {
+      page: 1,
+    },
+    options: {
+      // Options from react-query
+      retry: 2,
+    },
+  }); */
+
+  if (isLoading) return "Loading...";
+
+  if (error) return "An error has occurred: " + error.message;
+
+  return (
+    <div>
+      <h1>{data.name}</h1>
+      <p>{data.description}</p>
+      <strong>👀 {data.subscribers_count}</strong>{" "}
+      <strong>✨ {data.stargazers_count}</strong>{" "}
+      <strong>🍴 {data.forks_count}</strong>
+    </div>
+  );
+}
+```
+
+## Mutation Usage
+
+```ts
+import { createMutation, updateMutation } from "rest-react-query";
 
 export const createUserMutation = createMutation({
   path: "users",
@@ -49,36 +85,18 @@ export const updateUserMutation = updateMutation({
 });
 
 function Example() {
-  // GET http://localhost:3000/api/users
-  const { isLoading, error, data } = getUsersQuery();
+  const createUser = createUserMutation();
 
-  // GET http://localhost:3000/api/users/1/vehicles?page=1
-  const { isLoading, error, data } = getUsersQuery({
-    appendToUrl: "1/vehicles",
-    params: {
-      page: 1,
-    },
-    options: {
-      // Options from react-query
-      retry: 2,
-    },
-  });
-
+  /* OR
   const createUser = createUserMutation({
     invalidatePaths: ["products"],
     options: {
       // Options from react-query
       retry: 2,
     },
-  });
+  }); */
 
-  const updateUser = updateUserMutation();
-
-  if (isLoading) return "Loading...";
-
-  if (error) return "An error has occurred: " + error.message;
-
-  function handleSubmit() {
+  async function handleSubmit() {
     // POST /users
     await createUser.mutateAsync({
       data: {
@@ -87,14 +105,14 @@ function Example() {
     });
 
     /**
-     * PATCH /users/1/vehicles {
-     *  name: "John Doe"
+     * POST /users/1/vehicles {
+     *  plate: "XXXXX"
      * }
      */
-    await updateUser.mutateAsync({
+    await createUser.mutateAsync({
       appendToUrl: "1/vehicles",
       data: {
-        name: "John Doe",
+        plate: "XXXXX",
       },
     });
   }
@@ -111,9 +129,35 @@ function Example() {
 }
 ```
 
-## Authentication
+## Caching and Authencation
 
-> TODO: Explain authentication
+You can cache the mutation / query result using the `saveResponse` property.
+
+Example:
+
+```ts
+export const signInMutation = createMutation({
+  path: "auth/sign-in",
+  saveResponse: {
+    key: "user",
+  },
+});
+```
+
+Assuming that the response contains the user data with the `accessToken` property, you can use the `getSimpleJwtAuth` function to set the `Authorization` header with the `Bearer` prefix.
+
+```ts
+const App = ({ children }) => {
+  return (
+    <RestClientProvider
+      baseUrl="http://localhost:3000/api/"
+      {...getSimpleJwtAuth("user", "data.user.accessToken")}
+    >
+      {children}
+    </RestClientProvider>
+  );
+};
+```
 
 ## Mutation
 
