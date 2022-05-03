@@ -125,7 +125,7 @@ function Example() {
 }
 ```
 
-## Caching and Authencation
+## Caching and Authentication
 
 You can cache the mutation / query result using the `saveResponse` property.
 
