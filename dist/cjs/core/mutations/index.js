@@ -29,7 +29,7 @@ const lodash_1 = require("lodash");
 const react_query_1 = require("react-query");
 const __1 = require("..");
 const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, }) => {
-    const { axios } = (0, __1.useQueryContext)();
+    const { axios, autoInvalidation } = (0, __1.useRestContext)();
     const queryClient = (0, react_query_1.useQueryClient)();
     const _a = options || {}, { onSuccess } = _a, restOptions = __rest(_a, ["onSuccess"]);
     return (0, react_query_1.useMutation)((variables) => __awaiter(void 0, void 0, void 0, function* () {
@@ -44,11 +44,11 @@ const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, })
         }
         return response.data;
     }), Object.assign({ onSuccess: (data, variables, context) => {
-            queryClient.invalidateQueries(path);
-            queryClient.invalidateQueries(path);
+            if (autoInvalidation) {
+                queryClient.invalidateQueries(path);
+            }
             if (invalidatePaths) {
                 invalidatePaths.forEach((v) => {
-                    queryClient.invalidateQueries(v);
                     queryClient.invalidateQueries(v);
                 });
             }
@@ -58,9 +58,7 @@ const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, })
         } }, restOptions));
 };
 function buildMutation(operation, config) {
-    return function (overrideConfig) {
-        return Mutation(Object.assign(Object.assign(Object.assign({}, config), { operation }), overrideConfig));
-    };
+    return (overrideConfig) => Mutation(Object.assign(Object.assign(Object.assign({}, config), { operation }), overrideConfig));
 }
 exports.createMutation = (0, lodash_1.curry)(buildMutation)("CREATE");
 exports.updateMutation = (0, lodash_1.curry)(buildMutation)("UPDATE");
@@ -68,14 +66,15 @@ exports.replaceMutation = (0, lodash_1.curry)(buildMutation)("REPLACE");
 exports.deleteMutation = (0, lodash_1.curry)(buildMutation)("DELETE");
 function getMethodFromOperation(operation) {
     switch (operation) {
-        case "CREATE":
-            return "POST";
         case "UPDATE":
             return "PATCH";
         case "REPLACE":
             return "PUT";
         case "DELETE":
             return "DELETE";
+        case "CREATE":
+        default:
+            return "POST";
     }
 }
 //# sourceMappingURL=index.js.map

@@ -23,7 +23,7 @@ import { curry } from "lodash";
 import { useMutation, useQueryClient } from "react-query";
 import { buildUrl, useRestContext } from "..";
 const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, }) => {
-    const { axios } = useRestContext();
+    const { axios, autoInvalidation } = useRestContext();
     const queryClient = useQueryClient();
     const _a = options || {}, { onSuccess } = _a, restOptions = __rest(_a, ["onSuccess"]);
     return useMutation((variables) => __awaiter(void 0, void 0, void 0, function* () {
@@ -38,11 +38,11 @@ const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, })
         }
         return response.data;
     }), Object.assign({ onSuccess: (data, variables, context) => {
-            queryClient.invalidateQueries(path);
-            queryClient.invalidateQueries(path);
+            if (autoInvalidation) {
+                queryClient.invalidateQueries(path);
+            }
             if (invalidatePaths) {
                 invalidatePaths.forEach((v) => {
-                    queryClient.invalidateQueries(v);
                     queryClient.invalidateQueries(v);
                 });
             }

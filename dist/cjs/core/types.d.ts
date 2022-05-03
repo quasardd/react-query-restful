@@ -1,8 +1,13 @@
 import { AxiosInstance, AxiosRequestConfig } from "axios";
-export interface IBoilerplateQueryContext {
+import { QueryClientConfig } from "react-query";
+export interface IRestContext {
     axios: AxiosInstance;
+    autoInvalidation?: boolean;
 }
-export interface IBoilerplateQueryProviderProps {
+export interface IRestClientProviderProps {
     baseUrl: string;
     requestInterceptor?: (config: AxiosRequestConfig<any>) => Promise<AxiosRequestConfig<any>>;
+    axiosConfig?: AxiosRequestConfig<any>;
+    clientConfig?: QueryClientConfig | undefined;
+    autoInvalidation?: boolean;
 }

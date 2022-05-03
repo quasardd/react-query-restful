@@ -26,31 +26,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildUrl = exports.useQueryContext = exports.BoilerplateQueryProvider = void 0;
+exports.buildUrl = exports.useRestContext = exports.RestClientProvider = void 0;
 const react_1 = __importStar(require("react"));
 const react_query_1 = require("react-query");
 const axios_1 = __importDefault(require("axios"));
-const QueryContext = (0, react_1.createContext)({});
-const queryClient = new react_query_1.QueryClient();
-const BoilerplateQueryProvider = ({ children, baseUrl, requestInterceptor }) => {
+const RestContext = (0, react_1.createContext)({});
+const RestClientProvider = ({ children, baseUrl, requestInterceptor, clientConfig, axiosConfig, autoInvalidation = true, }) => {
+    const queryClient = (0, react_1.useMemo)(() => new react_query_1.QueryClient(clientConfig), [clientConfig]);
     const axios = (0, react_1.useMemo)(() => {
-        const axios = axios_1.default.create({
-            baseURL: baseUrl,
-            timeout: 30 * 1000,
-        });
+        const instance = axios_1.default.create(Object.assign({ baseURL: baseUrl, timeout: 30 * 1000 }, axiosConfig));
         if (requestInterceptor) {
-            axios.interceptors.request.use(requestInterceptor);
+            instance.interceptors.request.use(requestInterceptor);
         }
-        return axios;
-    }, [baseUrl, requestInterceptor]);
+        return instance;
+    }, [baseUrl, requestInterceptor, axiosConfig]);
+    const contextValues = (0, react_1.useMemo)(() => ({
+        axios,
+        autoInvalidation,
+    }), [axios, autoInvalidation]);
     return (react_1.default.createElement(react_query_1.QueryClientProvider, { client: queryClient },
-        react_1.default.createElement(QueryContext.Provider, { value: { axios } }, children)));
+        react_1.default.createElement(RestContext.Provider, { value: contextValues }, children)));
 };
-exports.BoilerplateQueryProvider = BoilerplateQueryProvider;
-const useQueryContext = () => {
-    return (0, react_1.useContext)(QueryContext);
-};
-exports.useQueryContext = useQueryContext;
+exports.RestClientProvider = RestClientProvider;
+const useRestContext = () => (0, react_1.useContext)(RestContext);
+exports.useRestContext = useRestContext;
 function buildUrl(path, append) {
     if (append) {
         return `${path}/${append}`;

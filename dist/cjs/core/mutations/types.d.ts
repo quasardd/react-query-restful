@@ -1,6 +1,11 @@
 import { UseMutationOptions } from "react-query";
 export declare type IOperationsMutations = "CREATE" | "UPDATE" | "REPLACE" | "DELETE";
-export declare type IBuildMutation = Omit<IMutation, "operation">;
+export interface IMutationData {
+    data?: {
+        [key: string]: any;
+    };
+    appendToUrl?: string | number;
+}
 export interface IMutation {
     path: string;
     operation: IOperationsMutations;
@@ -10,9 +15,4 @@ export interface IMutation {
     };
     options?: Omit<UseMutationOptions<any, unknown, IMutationData | undefined, unknown>, "mutationFn"> | undefined;
 }
-export interface IMutationData {
-    data?: {
-        [key: string]: any;
-    };
-    appendToUrl?: string | number;
-}
+export declare type IBuildMutation = Omit<IMutation, "operation">;

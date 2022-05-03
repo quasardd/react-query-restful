@@ -2,7 +2,7 @@ import React, { createContext, useMemo, useContext, } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Axios from "axios";
 const RestContext = createContext({});
-export const RestClientProvider = ({ children, baseUrl, requestInterceptor, clientConfig, axiosConfig }) => {
+export const RestClientProvider = ({ children, baseUrl, requestInterceptor, clientConfig, axiosConfig, autoInvalidation = true, }) => {
     const queryClient = useMemo(() => new QueryClient(clientConfig), [clientConfig]);
     const axios = useMemo(() => {
         const instance = Axios.create(Object.assign({ baseURL: baseUrl, timeout: 30 * 1000 }, axiosConfig));
@@ -13,7 +13,8 @@ export const RestClientProvider = ({ children, baseUrl, requestInterceptor, clie
     }, [baseUrl, requestInterceptor, axiosConfig]);
     const contextValues = useMemo(() => ({
         axios,
-    }), [axios]);
+        autoInvalidation,
+    }), [axios, autoInvalidation]);
     return (React.createElement(QueryClientProvider, { client: queryClient },
         React.createElement(RestContext.Provider, { value: contextValues }, children)));
 };

@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSimpleJwtAuth = exports.buildQuery = exports.updateMutation = exports.replaceMutation = exports.deleteMutation = exports.createMutation = exports.BoilerplateQueryProvider = void 0;
+exports.getSimpleJwtAuth = exports.buildQuery = exports.updateMutation = exports.replaceMutation = exports.deleteMutation = exports.createMutation = exports.RestClientProvider = void 0;
 var core_1 = require("./core");
-Object.defineProperty(exports, "BoilerplateQueryProvider", { enumerable: true, get: function () { return core_1.BoilerplateQueryProvider; } });
+Object.defineProperty(exports, "RestClientProvider", { enumerable: true, get: function () { return core_1.RestClientProvider; } });
 var mutations_1 = require("./core/mutations");
 Object.defineProperty(exports, "createMutation", { enumerable: true, get: function () { return mutations_1.createMutation; } });
 Object.defineProperty(exports, "deleteMutation", { enumerable: true, get: function () { return mutations_1.deleteMutation; } });
