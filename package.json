@@ -1,7 +1,7 @@
 {
-  "name": "react-query-boilerplate",
+  "name": "rest-react-query",
   "version": "0.1.0",
-  "description": "Boilerplate for React Query",
+  "description": "just a small collection of hooks that make it easy to integrate React Query into a REST API.",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "author": "Caio Henrique <chcp.caio@gmail.com>",
@@ -18,8 +18,7 @@
   "dependencies": {
     "axios": "^0.27.2",
     "@react-native-async-storage/async-storage": "^1.17.3",
-    "lodash": "^4.17.21",
-    "react-query": "^3.38.1"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.182",
@@ -27,6 +26,7 @@
     "@types/react": "18.0.8",
     "react": "^18.1.0",
     "typescript": "^4.6.4",
+    "react-query": "^3.38.1",
     "@typescript-eslint/eslint-plugin": "^5.9.0",
     "@typescript-eslint/parser": "^5.9.0",
     "eslint": "^8.6.0",
@@ -43,6 +43,7 @@
     "prettier": "^2.5.1"
   },
   "peerDependencies": {
-    "react": "^18.1.0"
+    "react": "^18.1.0",
+    "react-query": "^3.38.1"
   }
 }
