@@ -170,36 +170,36 @@ Mutations are automatically invalidating the queries with the same path, to disa
 
 ### Methods createMutation, updateMutation, deleteMutation, replaceMutation
 
-| Property        | Description                                                                                      |
-| --------------- | ------------------------------------------------------------------------------------------------ |
-| path            | A string that will be appended to the baseUrl.                                                   |
-| invalidatePaths | A array of strings that will be used to invalidate the queries after a successful mutation call. |
-| cacheResponse   | A object with the key that will be used to cache the response.                                   |
-| options         | A object with the options from react-query.                                                      |
+| Property        | Description                                                                                      | Required |
+| --------------- | ------------------------------------------------------------------------------------------------ | -------- |
+| path            | A string that will be appended to the baseUrl.                                                   | true     |
+| invalidatePaths | A array of strings that will be used to invalidate the queries after a successful mutation call. | false    |
+| cacheResponse   | A object with the key that will be used to cache the response.                                   | false    |
+| options         | A object with the options from react-query.                                                      | false    |
 
-When calling the result of the build in your React Component, you can pass again theses properties, but its optional.
+When calling the result of the build in your React Component, you can pass again theses properties, but all now will be optional.
 
 And when calling the mutation using `mutateAsync` or `mutate`, you can pass the following properties:
 
-| Property    | Description                                            |
-| ----------- | ------------------------------------------------------ |
-| data        | A object with the data to be sent in the request body. |
-| appendToUrl | A string that will be appended to the baseUrl.         |
+| Property    | Description                                            | Required |
+| ----------- | ------------------------------------------------------ | -------- |
+| data        | A object with the data to be sent in the request body. | false    |
+| appendToUrl | A string that will be appended to the baseUrl.         | false    |
 
 ## Query properties
 
 ### Method buildQuery
 
-| Property        | Description                                                                                      |
-| --------------- | ------------------------------------------------------------------------------------------------ |
-| path            | A string that will be appended to the baseUrl.                                                   |
-| invalidatePaths | A array of strings that will be used to invalidate the queries after a successful mutation call. |
-| cacheResponse   | A object with the key that will be used to cache the response.                                   |
-| options         | A object with the options from react-query.                                                      |
-| appendToUrl     | A string that will be appended to the baseUrl.                                                   |
-| params          | A object with the params that will be appended to the url.                                       |
+| Property        | Description                                                                                      | Required |
+| --------------- | ------------------------------------------------------------------------------------------------ | -------- |
+| path            | A string that will be appended to the baseUrl.                                                   | true     |
+| invalidatePaths | A array of strings that will be used to invalidate the queries after a successful mutation call. | false    |
+| cacheResponse   | A object with the key that will be used to cache the response.                                   | false    |
+| options         | A object with the options from react-query.                                                      | false    |
+| appendToUrl     | A string that will be appended to the baseUrl.                                                   | false    |
+| params          | A object with the params that will be appended to the url.                                       | false    |
 
-When calling the result of buildQuery in your React Component, you can pass again theses properties, but its optional.
+When calling the result of buildQuery in your React Component, you can pass again theses properties, but all now will be optional.
 
 ## Running the tests
 
