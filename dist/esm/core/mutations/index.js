@@ -21,9 +21,9 @@ var __rest = (this && this.__rest) || function (s, e) {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { curry } from "lodash";
 import { useMutation, useQueryClient } from "react-query";
-import { buildUrl, useQueryContext } from "..";
+import { buildUrl, useRestContext } from "..";
 const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, }) => {
-    const { axios } = useQueryContext();
+    const { axios } = useRestContext();
     const queryClient = useQueryClient();
     const _a = options || {}, { onSuccess } = _a, restOptions = __rest(_a, ["onSuccess"]);
     return useMutation((variables) => __awaiter(void 0, void 0, void 0, function* () {
@@ -52,9 +52,7 @@ const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, })
         } }, restOptions));
 };
 function buildMutation(operation, config) {
-    return function (overrideConfig) {
-        return Mutation(Object.assign(Object.assign(Object.assign({}, config), { operation }), overrideConfig));
-    };
+    return (overrideConfig) => Mutation(Object.assign(Object.assign(Object.assign({}, config), { operation }), overrideConfig));
 }
 export const createMutation = curry(buildMutation)("CREATE");
 export const updateMutation = curry(buildMutation)("UPDATE");
@@ -62,14 +60,15 @@ export const replaceMutation = curry(buildMutation)("REPLACE");
 export const deleteMutation = curry(buildMutation)("DELETE");
 function getMethodFromOperation(operation) {
     switch (operation) {
-        case "CREATE":
-            return "POST";
         case "UPDATE":
             return "PATCH";
         case "REPLACE":
             return "PUT";
         case "DELETE":
             return "DELETE";
+        case "CREATE":
+        default:
+            return "POST";
     }
 }
 //# sourceMappingURL=index.js.map

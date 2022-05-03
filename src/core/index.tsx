@@ -6,15 +6,12 @@ import React, {
 } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Axios from "axios";
-import {
-  IBoilerplateQueryContext,
-  IBoilerplateQueryProviderProps,
-} from "./types";
+import { IRestContext, IRestClientProviderProps } from "./types";
 
-const QueryContext = createContext({} as IBoilerplateQueryContext);
+const RestContext = createContext({} as IRestContext);
 
-export const BoilerplateQueryProvider: React.FC<
-  PropsWithChildren<IBoilerplateQueryProviderProps>
+export const RestClientProvider: React.FC<
+  PropsWithChildren<IRestClientProviderProps>
 > = ({ children, baseUrl, requestInterceptor, clientConfig, axiosConfig }) => {
   const queryClient = useMemo(
     () => new QueryClient(clientConfig),
@@ -44,14 +41,14 @@ export const BoilerplateQueryProvider: React.FC<
 
   return (
     <QueryClientProvider client={queryClient}>
-      <QueryContext.Provider value={contextValues}>
+      <RestContext.Provider value={contextValues}>
         {children}
-      </QueryContext.Provider>
+      </RestContext.Provider>
     </QueryClientProvider>
   );
 };
 
-export const useQueryContext = () => useContext(QueryContext);
+export const useRestContext = () => useContext(RestContext);
 
 export function buildUrl(path: string, append?: string | number) {
   if (append) {

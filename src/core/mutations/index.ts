@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { curry } from "lodash";
 import { useMutation, useQueryClient } from "react-query";
-import { buildUrl, useQueryContext } from "..";
+import { buildUrl, useRestContext } from "..";
 import {
   IBuildMutation,
   IMutation,
@@ -16,7 +16,7 @@ const Mutation = ({
   options,
   cacheResponse,
 }: IMutation) => {
-  const { axios } = useQueryContext();
+  const { axios } = useRestContext();
   const queryClient = useQueryClient();
 
   const { onSuccess, ...restOptions } = options || {};

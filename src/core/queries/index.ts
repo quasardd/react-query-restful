@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery } from "react-query";
-import { buildUrl, useQueryContext } from "..";
+import { buildUrl, useRestContext } from "..";
 import { IQuery } from "./types";
 
 const Query = ({
@@ -10,7 +10,7 @@ const Query = ({
   options,
   cacheResponse,
 }: IQuery) => {
-  const { axios } = useQueryContext();
+  const { axios } = useRestContext();
 
   return useQuery({
     queryKey: [path, appendToUrl, params],

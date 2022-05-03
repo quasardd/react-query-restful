@@ -7,21 +7,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-// import { get } from "lodash";
-export const getSimpleJwtAuth = (key, path) => {
-    return {
-        interceptorRequest: (config) => __awaiter(void 0, void 0, void 0, function* () {
-            /* const authCached = await AsyncStorage.getItem(key);
-      
-            if (authCached && config.headers) {
-              const cachedParsed = JSON.parse(authCached);
-      
-              const token = get(cachedParsed, path);
-      
-              config.headers.Authorization = `Bearer ${token}`;
-            }*/
-            return config;
-        }),
-    };
-};
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { get } from "lodash";
+export const getSimpleJwtAuth = (key, path) => ({
+    interceptorRequest: (config) => __awaiter(void 0, void 0, void 0, function* () {
+        const authCached = yield AsyncStorage.getItem(key);
+        if (authCached && config.headers) {
+            const cachedParsed = JSON.parse(authCached);
+            const token = get(cachedParsed, path);
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    }),
+});
 //# sourceMappingURL=auths.js.map

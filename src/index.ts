@@ -1,4 +1,4 @@
-export { BoilerplateQueryProvider } from "./core";
+export { RestClientProvider } from "./core";
 
 export {
   createMutation,
