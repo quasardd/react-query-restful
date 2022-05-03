@@ -32,7 +32,7 @@ export default function App() {
 }
 ```
 
-## Query Usage
+## Query usage
 
 ```ts
 import { buildQuery } from "rest-react-query";
@@ -71,7 +71,7 @@ function Example() {
 }
 ```
 
-## Mutation Usage
+## Mutation usage
 
 For Mutations, you can import the following methods:
 
@@ -166,9 +166,9 @@ const App = ({ children }) => {
 
 Mutations are automatically invalidating the queries with the same path, to disable this, pass a falsy `autoInvalidation` in the `RestClientProvider`.
 
-## Mutation
+## Mutation properties
 
-# Methods createMutation, updateMutation, deleteMutation, replaceMutation
+### Methods createMutation, updateMutation, deleteMutation, replaceMutation
 
 | Property        | Description                                                                                      |
 | --------------- | ------------------------------------------------------------------------------------------------ |
@@ -186,9 +186,9 @@ And when calling the mutation using `mutateAsync` or `mutate`, you can pass the 
 | data        | A object with the data to be sent in the request body. |
 | appendToUrl | A string that will be appended to the baseUrl.         |
 
-## Query
+## Query properties
 
-# Method buildQuery
+### Method buildQuery
 
 | Property        | Description                                                                                      |
 | --------------- | ------------------------------------------------------------------------------------------------ |
