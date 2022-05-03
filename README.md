@@ -74,13 +74,9 @@ function Example() {
 ## Mutation Usage
 
 ```ts
-import { createMutation, updateMutation } from "rest-react-query";
+import { createMutation } from "rest-react-query";
 
 export const createUserMutation = createMutation({
-  path: "users",
-});
-
-export const updateUserMutation = updateMutation({
   path: "users",
 });
 
@@ -97,7 +93,11 @@ function Example() {
   }); */
 
   async function handleSubmit() {
-    // POST /users
+    /**
+     * POST /users {
+     *  name: "John Doe"
+     * }
+     */
     await createUser.mutateAsync({
       data: {
         name: "John Doe",
@@ -119,11 +119,7 @@ function Example() {
 
   return (
     <div>
-      <h1>{data.name}</h1>
-      <p>{data.description}</p>
-      <strong>👀 {data.subscribers_count}</strong>{" "}
-      <strong>✨ {data.stargazers_count}</strong>{" "}
-      <strong>🍴 {data.forks_count}</strong>
+      <h1>Hello there!</h1>
     </div>
   );
 }
@@ -158,6 +154,10 @@ const App = ({ children }) => {
   );
 };
 ```
+
+## Auto invalidation feature
+
+Mutations are automatically invalidating the queries with the same path, to disable this, pass a falsy `autoInvalidation` in the `RestClientProvider`.
 
 ## Mutation
 
