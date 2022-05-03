@@ -13,15 +13,18 @@ import {
 
 const QueryContext = createContext({} as IBoilerplateQueryContext);
 
-const queryClient = new QueryClient();
-
 export const BoilerplateQueryProvider: React.FC<
   PropsWithChildren<IBoilerplateQueryProviderProps>
-> = ({ children, baseUrl, requestInterceptor }) => {
+> = ({ children, baseUrl, requestInterceptor, clientConfig, axiosConfig }) => {
+  const queryClient = useMemo(() => {
+    return new QueryClient(clientConfig);
+  }, [clientConfig]);
+
   const axios = useMemo(() => {
     const axios = Axios.create({
       baseURL: baseUrl,
       timeout: 30 * 1000,
+      ...axiosConfig,
     });
 
     if (requestInterceptor) {
@@ -29,7 +32,7 @@ export const BoilerplateQueryProvider: React.FC<
     }
 
     return axios;
-  }, [baseUrl, requestInterceptor]);
+  }, [baseUrl, requestInterceptor, axiosConfig]);
 
   return (
     <QueryClientProvider client={queryClient}>
