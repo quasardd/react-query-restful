@@ -2,7 +2,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AxiosRequestConfig } from "axios";
 import { get } from "lodash";
 
-export const getSimpleJwtAuth = (key: string, path: string) => ({
+export const getSimpleJwtAuth = ({
+  key,
+  path,
+}: {
+  key: string;
+  path: string;
+}) => ({
   interceptorRequest: async (config: AxiosRequestConfig) => {
     const authCached = await AsyncStorage.getItem(key);
 

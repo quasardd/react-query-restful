@@ -151,7 +151,7 @@ const App = ({ children }) => {
   return (
     <RestClientProvider
       baseUrl="http://localhost:3000/api/"
-      {...getSimpleJwtAuth("user", "data.user.accessToken")}
+      {...getSimpleJwtAuth({ key: "user", path: "data.user.accessToken" })}
     >
       {children}
     </RestClientProvider>
