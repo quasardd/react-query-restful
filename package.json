@@ -1,7 +1,11 @@
 {
   "name": "rest-react-query",
   "version": "0.1.0",
-  "description": "just a small collection of hooks that make it easy to integrate React Query into a REST API.",
+  "description": "Just a small collection of hooks that make it easy to integrate React Query into a REST API.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/quasardd/rest-react-query/"
+  },
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "author": "Caio Henrique <chcp.caio@gmail.com>",

@@ -1,6 +1,8 @@
 # REST React Query
 
-`rest-react-query` is just a small collection of hooks that make it easy to integrate [React Query](https://github.com/tannerlinsley/react-query) into a REST API. Compatible with React Native.
+`rest-react-query` is just a small collection of hooks that make it easy to integrate [React Query](https://github.com/tannerlinsley/react-query) into a REST API. For a better understanding of the library, it is recommended to understand how React Query works.
+
+Compatible with React Native.
 
 ### Installing
 
@@ -147,7 +149,7 @@ export const signInMutation = createMutation({
 });
 ```
 
-Assuming that the response contains the user data with the `accessToken` property, you can use the `getSimpleJwtAuth` function to set the `Authorization` header with the `Bearer` prefix.
+Assuming that the response contains the user data with the `accessToken` property, you can use the `getSimpleJwtAuth` function to set the `Authorization` header with the `Bearer` prefix. You must specify the `key` where it's stored in the cache, and the `path` until the token.
 
 ```ts
 const App = ({ children }) => {
