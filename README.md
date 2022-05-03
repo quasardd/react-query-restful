@@ -73,6 +73,13 @@ function Example() {
 
 ## Mutation Usage
 
+For Mutations, you can import the following methods:
+
+- `createMutation` (for POST request)
+- `updateMutation` (for PATCH request)
+- `deleteMutation` (for DELETE request)
+- `replaceMutation` (for PUT request)
+
 ```ts
 import { createMutation } from "rest-react-query";
 
