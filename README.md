@@ -1,6 +1,6 @@
 # REST React Query
 
-`rest-react-query` is just a small collection of hooks that make it easy to integrate React Query into a REST API. Compatible with React Native.
+`rest-react-query` is just a small collection of hooks that make it easy to integrate [React Query](https://github.com/tannerlinsley/react-query) into a REST API. Compatible with React Native.
 
 ### Installing
 
@@ -180,7 +180,7 @@ Feel free to submit a PR.
 - **[Caio Henrique](https://github.com/Coystark)**
 - **[Marcel P Goes](https://github.com/glothos)**
 
-See also the list of [contributors](https://github.com/quasardd/react-query-rest-boilerplate/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/quasardd/rest-react-query/graphs/contributors) who participated in this project.
 
 ## License
 
