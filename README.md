@@ -153,7 +153,7 @@ Example:
 
 ```ts
 export const { createSignInMutation } = createMutation({
-  path: ["auth", "sign_in"], // Same as `/auth/sign_in`
+  path: ["auth", "sign-in"], // Same as `baseUrl/auth/sign-in`
   cacheResponse: {
     key: "user",
   },
@@ -175,12 +175,12 @@ const App = ({ children }) => {
 };
 ```
 
-You can make your own custom authentication logic, example::
+You can make your own custom authentication logic, example:
 
 ```ts
 import { AsyncStorage } from "rest-react-query";
 
-export const myOwnLogic = ({ key, path }: { key: string; path: string }) => ({
+export const myOwnLogic = () => ({
   interceptors: {
     onRequest: async (config: any) => {
       const cachedToken = await AsyncStorage.getItem("token");
@@ -243,6 +243,16 @@ And when calling the methods `mutateAsync` or `mutate` from mutation, you can pa
 | params          | A object with the params that will be appended to the url.                                       | false    |
 
 When calling the result of the build at component level, you can pass again theses properties, but all now will be optional.
+
+## Provider properties
+
+| Property         | Description                                                      | Required |
+| ---------------- | ---------------------------------------------------------------- | -------- |
+| baseUrl          | A string with the base url.                                      | true     |
+| axiosConfig      | A object with the axios config.                                  | false    |
+| clientConfig     | A object with the React-Query Client config.                     | false    |
+| autoInvalidation | A boolean that will enable or disable auto invalidation.         | false    |
+| interceptors     | A object with a few interceptors that will be attached to axios. | false    |
 
 ## Running the tests
 
