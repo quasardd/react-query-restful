@@ -22,7 +22,10 @@ const Query = ({
       });
 
       if (cacheResponse) {
-        await AsyncStorage.setItem(cacheResponse.key, response.data);
+        await AsyncStorage.setItem(
+          cacheResponse.key,
+          JSON.stringify(response.data)
+        );
       }
 
       return response.data;
