@@ -74,12 +74,13 @@ function buildMutation(config) {
         const singularPath = path.replace(/s$/, "");
         formattedPaths.push(singularPath);
     }
-    const methods = formattedPaths.map((path) => ({
-        [(0, lodash_1.camelCase)(`create ${path} Mutation`)]: buildWithConfig("CREATE"),
-        [(0, lodash_1.camelCase)(`update ${path} Mutation`)]: buildWithConfig("UPDATE"),
-        [(0, lodash_1.camelCase)(`replace ${path} Mutation`)]: buildWithConfig("REPLACE"),
-        [(0, lodash_1.camelCase)(`delete ${path} Mutation`)]: buildWithConfig("DELETE"),
-    }));
+    const methods = {};
+    formattedPaths.forEach((path) => {
+        methods[(0, lodash_1.camelCase)(`create ${path} Mutation`)] = buildWithConfig("CREATE");
+        methods[(0, lodash_1.camelCase)(`update ${path} Mutation`)] = buildWithConfig("UPDATE");
+        methods[(0, lodash_1.camelCase)(`replace ${path} Mutation`)] = buildWithConfig("REPLACE");
+        methods[(0, lodash_1.camelCase)(`delete ${path} Mutation`)] = buildWithConfig("DELETE");
+    });
     return methods;
 }
 exports.buildMutation = buildMutation;
