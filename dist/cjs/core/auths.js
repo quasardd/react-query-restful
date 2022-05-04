@@ -16,15 +16,17 @@ exports.getSimpleJwtAuth = void 0;
 const async_storage_1 = __importDefault(require("@react-native-async-storage/async-storage"));
 const lodash_1 = require("lodash");
 const getSimpleJwtAuth = ({ key, path, }) => ({
-    interceptorRequest: (config) => __awaiter(void 0, void 0, void 0, function* () {
-        const authCached = yield async_storage_1.default.getItem(key);
-        if (authCached && config.headers) {
-            const cachedParsed = JSON.parse(authCached);
-            const token = (0, lodash_1.get)(cachedParsed, path);
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    }),
+    interceptors: {
+        onRequest: (config) => __awaiter(void 0, void 0, void 0, function* () {
+            const authCached = yield async_storage_1.default.getItem(key);
+            if (authCached && config.headers) {
+                const cachedParsed = JSON.parse(authCached);
+                const token = (0, lodash_1.get)(cachedParsed, path);
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+            return config;
+        }),
+    },
 });
 exports.getSimpleJwtAuth = getSimpleJwtAuth;
 //# sourceMappingURL=auths.js.map

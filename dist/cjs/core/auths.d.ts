@@ -3,5 +3,7 @@ export declare const getSimpleJwtAuth: ({ key, path, }: {
     key: string;
     path: string;
 }) => {
-    interceptorRequest: (config: AxiosRequestConfig) => Promise<AxiosRequestConfig<any>>;
+    interceptors: {
+        onRequest: (config: AxiosRequestConfig) => Promise<AxiosRequestConfig<any>>;
+    };
 };

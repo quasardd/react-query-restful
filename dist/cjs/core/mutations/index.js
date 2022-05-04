@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteMutation = exports.replaceMutation = exports.updateMutation = exports.createMutation = void 0;
+exports.buildMutation = void 0;
 const async_storage_1 = __importDefault(require("@react-native-async-storage/async-storage"));
 const lodash_1 = require("lodash");
 const react_query_1 = require("react-query");
@@ -57,13 +57,19 @@ const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, })
             }
         } }, restOptions));
 };
-function buildMutation(operation, config) {
+function build(config, operation) {
     return (overrideConfig) => Mutation(Object.assign(Object.assign(Object.assign({}, config), { operation }), overrideConfig));
 }
-exports.createMutation = (0, lodash_1.curry)(buildMutation)("CREATE");
-exports.updateMutation = (0, lodash_1.curry)(buildMutation)("UPDATE");
-exports.replaceMutation = (0, lodash_1.curry)(buildMutation)("REPLACE");
-exports.deleteMutation = (0, lodash_1.curry)(buildMutation)("DELETE");
+function buildMutation(config) {
+    const buildWithConfig = (0, lodash_1.curry)(build)(config);
+    return {
+        createMutation: buildWithConfig("CREATE"),
+        updateMutation: buildWithConfig("UPDATE"),
+        replaceMutation: buildWithConfig("REPLACE"),
+        deleteMutation: buildWithConfig("DELETE"),
+    };
+}
+exports.buildMutation = buildMutation;
 function getMethodFromOperation(operation) {
     switch (operation) {
         case "UPDATE":

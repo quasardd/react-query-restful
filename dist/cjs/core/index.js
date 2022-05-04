@@ -31,15 +31,16 @@ const react_1 = __importStar(require("react"));
 const react_query_1 = require("react-query");
 const axios_1 = __importDefault(require("axios"));
 const RestContext = (0, react_1.createContext)({});
-const RestClientProvider = ({ children, baseUrl, requestInterceptor, clientConfig, axiosConfig, autoInvalidation = true, }) => {
+const RestClientProvider = ({ children, baseUrl, clientConfig, axiosConfig, autoInvalidation = true, interceptors, }) => {
     const queryClient = (0, react_1.useMemo)(() => new react_query_1.QueryClient(clientConfig), [clientConfig]);
     const axios = (0, react_1.useMemo)(() => {
         const instance = axios_1.default.create(Object.assign({ baseURL: baseUrl, timeout: 30 * 1000 }, axiosConfig));
-        if (requestInterceptor) {
-            instance.interceptors.request.use(requestInterceptor);
+        if (interceptors) {
+            instance.interceptors.request.use(interceptors.onRequest, interceptors.onRequestError);
+            instance.interceptors.response.use(interceptors.onResponse, interceptors.onResponseError);
         }
         return instance;
-    }, [baseUrl, requestInterceptor, axiosConfig]);
+    }, [baseUrl, axiosConfig, interceptors]);
     const contextValues = (0, react_1.useMemo)(() => ({
         axios,
         autoInvalidation,

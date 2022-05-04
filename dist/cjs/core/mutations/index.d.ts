@@ -1,5 +1,7 @@
 import { IBuildMutation, IMutationData } from "./types";
-export declare const createMutation: import("lodash").CurriedFunction1<IBuildMutation, (overrideConfig?: Partial<IBuildMutation> | undefined) => import("react-query").UseMutationResult<any, unknown, IMutationData | undefined, unknown>>;
-export declare const updateMutation: import("lodash").CurriedFunction1<IBuildMutation, (overrideConfig?: Partial<IBuildMutation> | undefined) => import("react-query").UseMutationResult<any, unknown, IMutationData | undefined, unknown>>;
-export declare const replaceMutation: import("lodash").CurriedFunction1<IBuildMutation, (overrideConfig?: Partial<IBuildMutation> | undefined) => import("react-query").UseMutationResult<any, unknown, IMutationData | undefined, unknown>>;
-export declare const deleteMutation: import("lodash").CurriedFunction1<IBuildMutation, (overrideConfig?: Partial<IBuildMutation> | undefined) => import("react-query").UseMutationResult<any, unknown, IMutationData | undefined, unknown>>;
+export declare function buildMutation(config: IBuildMutation): {
+    createMutation: (overrideConfig?: Partial<IBuildMutation> | undefined) => import("react-query").UseMutationResult<any, unknown, IMutationData | undefined, unknown>;
+    updateMutation: (overrideConfig?: Partial<IBuildMutation> | undefined) => import("react-query").UseMutationResult<any, unknown, IMutationData | undefined, unknown>;
+    replaceMutation: (overrideConfig?: Partial<IBuildMutation> | undefined) => import("react-query").UseMutationResult<any, unknown, IMutationData | undefined, unknown>;
+    deleteMutation: (overrideConfig?: Partial<IBuildMutation> | undefined) => import("react-query").UseMutationResult<any, unknown, IMutationData | undefined, unknown>;
+};
