@@ -25,7 +25,7 @@ const Query = ({ params, appendToUrl, path, options, cacheResponse, }) => {
                 url: (0, __1.buildUrl)(path, appendToUrl),
             });
             if (cacheResponse) {
-                yield async_storage_1.default.setItem(cacheResponse.key, response.data);
+                yield async_storage_1.default.setItem(cacheResponse.key, JSON.stringify(response.data));
             }
             return response.data;
         }) }, options));

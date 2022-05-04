@@ -19,7 +19,7 @@ const Query = ({ params, appendToUrl, path, options, cacheResponse, }) => {
                 url: buildUrl(path, appendToUrl),
             });
             if (cacheResponse) {
-                yield AsyncStorage.setItem(cacheResponse.key, response.data);
+                yield AsyncStorage.setItem(cacheResponse.key, JSON.stringify(response.data));
             }
             return response.data;
         }) }, options));

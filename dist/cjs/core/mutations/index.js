@@ -40,7 +40,7 @@ const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, })
             url: (0, __1.buildUrl)(path, variables === null || variables === void 0 ? void 0 : variables.appendToUrl),
         });
         if (cacheResponse) {
-            yield async_storage_1.default.setItem(cacheResponse.key, response.data);
+            yield async_storage_1.default.setItem(cacheResponse.key, JSON.stringify(response.data));
         }
         return response.data;
     }), Object.assign({ onSuccess: (data, variables, context) => {
