@@ -77,12 +77,14 @@ function Example() {
 
 ## Mutation usage
 
-The `buildMutation` method will return a few functions:
+The `buildMutation` method will return a few functions, the name will be based on the informed paths.
 
-- `createMutation` (for POST request)
-- `updateMutation` (for PATCH request)
-- `deleteMutation` (for DELETE request)
-- `replaceMutation` (for PUT request)
+Exemple, the path `users` will generate the following functions:
+
+- `createUserMutation` (for POST request)
+- `updateUserMutation` (for PATCH request)
+- `deleteUserMutation` (for DELETE request)
+- `replaceUserMutation` (for PUT request)
 
 All will share the same path & configuration.
 
@@ -90,10 +92,10 @@ All will share the same path & configuration.
 import { buildMutation } from "rest-react-query";
 
 export const {
-  createMutation: createUserMutation,
-  updateMutation,
-  deleteMutation,
-  replaceMutation,
+  createUserMutation,
+  updateUserMutation,
+  deleteUserMutation,
+  replaceUserMutation,
 } = buildMutation({
   path: "users",
 });
@@ -150,8 +152,8 @@ You can cache the mutation / query result using the `cacheResponse` property.
 Example:
 
 ```ts
-export const { createMutation: signInMutation } = createMutation({
-  path: "auth/sign-in",
+export const { createSignInMutation } = createMutation({
+  path: ["auth", "sign_in"], // Same as `/auth/sign_in`
   cacheResponse: {
     key: "user",
   },
@@ -181,7 +183,7 @@ Mutations are automatically invalidating the queries that shared the same path, 
 
 | Property        | Description                                                                                      | Required |
 | --------------- | ------------------------------------------------------------------------------------------------ | -------- |
-| path            | A string that will be appended to the baseUrl.                                                   | true     |
+| path            | A string or a array of string that will be appended to the baseUrl.                              | true     |
 | invalidatePaths | A array of strings that will be used to invalidate the queries after a successful mutation call. | false    |
 | cacheResponse   | A object with the key that will be used to cache the response.                                   | false    |
 | options         | A object with the options from react-query.                                                      | false    |
@@ -199,7 +201,7 @@ And when calling the methods `mutateAsync` or `mutate` from mutation, you can pa
 
 | Property        | Description                                                                                      | Required |
 | --------------- | ------------------------------------------------------------------------------------------------ | -------- |
-| path            | A string that will be appended to the baseUrl.                                                   | true     |
+| path            | A string or a array of string that will be appended to the baseUrl.                              | true     |
 | invalidatePaths | A array of strings that will be used to invalidate the queries after a successful mutation call. | false    |
 | cacheResponse   | A object with the key that will be used to cache the response.                                   | false    |
 | options         | A object with the options from react-query.                                                      | false    |
