@@ -269,6 +269,8 @@ Feel free to submit a PR.
 
 See also the list of [contributors](https://github.com/quasardd/rest-react-query/graphs/contributors) who participated in this project.
 
+Thanks to [Anurag Hazra](https://github.com/anuraghazra) for the TypeScript magic =).
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details

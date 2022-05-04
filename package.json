@@ -1,6 +1,6 @@
 {
   "name": "rest-react-query",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Just a small collection of hooks that make it easy to integrate React Query into a REST API.",
   "repository": {
     "type": "git",
