@@ -175,11 +175,9 @@ const App = ({ children }) => {
 
 ## Auto invalidation feature
 
-Mutations are automatically invalidating the queries with the same path, to disable this, pass a falsy `autoInvalidation` in the `RestClientProvider`.
+Mutations are automatically invalidating the queries that shared the same path, to disable this, pass a falsy `autoInvalidation` in the `RestClientProvider`.
 
 ## Mutation properties
-
-### Methods createMutation, updateMutation, deleteMutation, replaceMutation
 
 | Property        | Description                                                                                      | Required |
 | --------------- | ------------------------------------------------------------------------------------------------ | -------- |
@@ -188,9 +186,9 @@ Mutations are automatically invalidating the queries with the same path, to disa
 | cacheResponse   | A object with the key that will be used to cache the response.                                   | false    |
 | options         | A object with the options from react-query.                                                      | false    |
 
-When calling the result of the build in your React Component, you can pass again theses properties, but all now will be optional.
+When calling the result of the build at component level, you can pass again theses properties, but all now will be optional.
 
-And when calling the mutation using `mutateAsync` or `mutate`, you can pass the following properties:
+And when calling the methods `mutateAsync` or `mutate` from mutation, you can pass the following properties:
 
 | Property    | Description                                            | Required |
 | ----------- | ------------------------------------------------------ | -------- |
@@ -198,8 +196,6 @@ And when calling the mutation using `mutateAsync` or `mutate`, you can pass the 
 | appendToUrl | A string that will be appended to the baseUrl.         | false    |
 
 ## Query properties
-
-### Method buildQuery
 
 | Property        | Description                                                                                      | Required |
 | --------------- | ------------------------------------------------------------------------------------------------ | -------- |
@@ -210,7 +206,7 @@ And when calling the mutation using `mutateAsync` or `mutate`, you can pass the 
 | appendToUrl     | A string that will be appended to the baseUrl.                                                   | false    |
 | params          | A object with the params that will be appended to the url.                                       | false    |
 
-When calling the result of buildQuery in your React Component, you can pass again theses properties, but all now will be optional.
+When calling the result of the build at component level, you can pass again theses properties, but all now will be optional.
 
 ## Running the tests
 
