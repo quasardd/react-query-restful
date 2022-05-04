@@ -77,17 +77,24 @@ function Example() {
 
 ## Mutation usage
 
-For Mutations, you can import the following methods:
+The `buildMutation` method will return a few functions:
 
 - `createMutation` (for POST request)
 - `updateMutation` (for PATCH request)
 - `deleteMutation` (for DELETE request)
 - `replaceMutation` (for PUT request)
 
-```ts
-import { createMutation } from "rest-react-query";
+All will share the same path & configuration.
 
-export const createUserMutation = createMutation({
+```ts
+import { buildMutation } from "rest-react-query";
+
+export const {
+  createMutation: createUserMutation,
+  updateMutation,
+  deleteMutation,
+  replaceMutation,
+} = buildMutation({
   path: "users",
 });
 
@@ -143,7 +150,7 @@ You can cache the mutation / query result using the `cacheResponse` property.
 Example:
 
 ```ts
-export const signInMutation = createMutation({
+export const { createMutation: signInMutation } = createMutation({
   path: "auth/sign-in",
   cacheResponse: {
     key: "user",

@@ -1,11 +1,6 @@
 export { RestClientProvider } from "./core";
 
-export {
-  createMutation,
-  deleteMutation,
-  replaceMutation,
-  updateMutation,
-} from "./core/mutations";
+export { buildMutation } from "./core/mutations";
 
 export { buildQuery } from "./core/queries";
 

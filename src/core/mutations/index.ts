@@ -58,18 +58,21 @@ const Mutation = ({
   );
 };
 
-function buildMutation(
-  operation: IOperationsMutations,
-  config: IBuildMutation
-) {
+function build(config: IBuildMutation, operation: IOperationsMutations) {
   return (overrideConfig?: Partial<IBuildMutation>) =>
     Mutation({ ...config, operation, ...overrideConfig });
 }
 
-export const createMutation = curry(buildMutation)("CREATE");
-export const updateMutation = curry(buildMutation)("UPDATE");
-export const replaceMutation = curry(buildMutation)("REPLACE");
-export const deleteMutation = curry(buildMutation)("DELETE");
+export function buildMutation(config: IBuildMutation) {
+  const buildWithConfig = curry(build)(config);
+
+  return {
+    createMutation: buildWithConfig("CREATE"),
+    updateMutation: buildWithConfig("UPDATE"),
+    replaceMutation: buildWithConfig("REPLACE"),
+    deleteMutation: buildWithConfig("DELETE"),
+  };
+}
 
 function getMethodFromOperation(operation: IOperationsMutations) {
   switch (operation) {
