@@ -15,10 +15,10 @@ export const RestClientProvider: React.FC<
 > = ({
   children,
   baseUrl,
-  requestInterceptor,
   clientConfig,
   axiosConfig,
   autoInvalidation = true,
+  interceptors,
 }) => {
   const queryClient = useMemo(
     () => new QueryClient(clientConfig),
@@ -32,12 +32,20 @@ export const RestClientProvider: React.FC<
       ...axiosConfig,
     });
 
-    if (requestInterceptor) {
-      instance.interceptors.request.use(requestInterceptor);
+    if (interceptors) {
+      instance.interceptors.request.use(
+        interceptors.onRequest,
+        interceptors.onRequestError
+      );
+
+      instance.interceptors.response.use(
+        interceptors.onResponse,
+        interceptors.onResponseError
+      );
     }
 
     return instance;
-  }, [baseUrl, requestInterceptor, axiosConfig]);
+  }, [baseUrl, axiosConfig, interceptors]);
 
   const contextValues = useMemo(
     () => ({

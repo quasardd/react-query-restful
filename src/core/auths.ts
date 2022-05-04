@@ -9,17 +9,19 @@ export const getSimpleJwtAuth = ({
   key: string;
   path: string;
 }) => ({
-  interceptorRequest: async (config: AxiosRequestConfig) => {
-    const authCached = await AsyncStorage.getItem(key);
+  interceptors: {
+    onRequest: async (config: AxiosRequestConfig) => {
+      const authCached = await AsyncStorage.getItem(key);
 
-    if (authCached && config.headers) {
-      const cachedParsed = JSON.parse(authCached);
+      if (authCached && config.headers) {
+        const cachedParsed = JSON.parse(authCached);
 
-      const token = get(cachedParsed, path);
+        const token = get(cachedParsed, path);
 
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+        config.headers.Authorization = `Bearer ${token}`;
+      }
 
-    return config;
+      return config;
+    },
   },
 });

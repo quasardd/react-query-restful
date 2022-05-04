@@ -1,4 +1,9 @@
-import { AxiosInstance, AxiosRequestConfig } from "axios";
+import {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from "axios";
 import { QueryClientConfig } from "react-query";
 
 export interface IRestContext {
@@ -8,10 +13,13 @@ export interface IRestContext {
 
 export interface IRestClientProviderProps {
   baseUrl: string;
-  requestInterceptor?: (
-    config: AxiosRequestConfig<any>
-  ) => Promise<AxiosRequestConfig<any>>;
-  axiosConfig?: AxiosRequestConfig<any>;
-  clientConfig?: QueryClientConfig | undefined;
+  interceptors?: {
+    onRequest?: (config: AxiosRequestConfig) => AxiosRequestConfig;
+    onRequestError?: (error: AxiosError) => Promise<AxiosError>;
+    onResponse?: (config: AxiosResponse) => AxiosResponse;
+    onResponseError?: (error: AxiosError) => Promise<AxiosError>;
+  };
+  axiosConfig?: AxiosRequestConfig;
+  clientConfig?: QueryClientConfig;
   autoInvalidation?: boolean;
 }
