@@ -9,7 +9,7 @@ export interface IRestClientProviderProps {
     interceptors?: {
         onRequest?: (config: AxiosRequestConfig) => AxiosRequestConfig | Promise<AxiosRequestConfig>;
         onRequestError?: (error: AxiosError) => Promise<AxiosError> | AxiosError;
-        onResponse?: (config: AxiosResponse) => AxiosRequestConfig | Promise<AxiosRequestConfig>;
+        onResponse?: (response: AxiosResponse) => AxiosRequestConfig | Promise<AxiosRequestConfig>;
         onResponseError?: (error: AxiosError) => Promise<AxiosError> | AxiosError;
     };
     axiosConfig?: AxiosRequestConfig;
