@@ -21,9 +21,10 @@ export const RestClientProvider = ({ children, baseUrl, clientConfig, axiosConfi
 };
 export const useRestContext = () => useContext(RestContext);
 export function buildUrl(path, append) {
+    const paths = Array.isArray(path) ? path.join("/") : path;
     if (append) {
-        return `${path}/${append}`;
+        return `${paths}/${append}`;
     }
-    return path;
+    return paths;
 }
 //# sourceMappingURL=index.js.map

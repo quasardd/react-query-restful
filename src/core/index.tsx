@@ -66,10 +66,12 @@ export const RestClientProvider: React.FC<
 
 export const useRestContext = () => useContext(RestContext);
 
-export function buildUrl(path: string, append?: string | number) {
+export function buildUrl(path: string[] | string, append?: string | number) {
+  const paths = Array.isArray(path) ? path.join("/") : path;
+
   if (append) {
-    return `${path}/${append}`;
+    return `${paths}/${append}`;
   }
 
-  return path;
+  return paths;
 }

@@ -1,4 +1,5 @@
-import { UseMutationOptions } from "react-query";
+import { UseMutationOptions, UseMutationResult } from "react-query";
+import type { PascalCase } from "type-fest";
 
 export type IOperationsMutations = "CREATE" | "UPDATE" | "REPLACE" | "DELETE";
 
@@ -8,7 +9,7 @@ export interface IMutationData {
 }
 
 export interface IMutation {
-  path: string;
+  path: string | string[];
   operation: IOperationsMutations;
   invalidatePaths?: string[];
   cacheResponse?: {
@@ -22,4 +23,23 @@ export interface IMutation {
     | undefined;
 }
 
-export type IBuildMutation = Omit<IMutation, "operation">;
+export type IMutationConfig = Omit<IMutation, "operation">;
+
+export interface IBuildMutation<T>
+  extends Omit<IMutation, "path" | "operation"> {
+  path: T[] | T;
+}
+
+type ISingular<T extends string> = T extends `${infer Front}s`
+  ? Capitalize<Front>
+  : Capitalize<T>;
+
+type IMutationFn = (
+  overrideConfig?: Partial<IMutationConfig>
+) => UseMutationResult<any, unknown, IMutationData | undefined, unknown>;
+
+export type IBuildMutationReturnType<Path extends string> = {
+  [K in IOperationsMutations as `${Lowercase<IOperationsMutations>}${PascalCase<
+    ISingular<Path>
+  >}Mutation`]: IMutationFn;
+};

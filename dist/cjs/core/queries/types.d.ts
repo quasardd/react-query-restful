@@ -1,6 +1,6 @@
 import { UseQueryOptions } from "react-query";
 export interface IQuery {
-    path: string;
+    path: string | string[];
     params?: {
         [key: string]: any;
     };

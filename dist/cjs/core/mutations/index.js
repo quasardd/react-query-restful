@@ -62,12 +62,25 @@ function build(config, operation) {
 }
 function buildMutation(config) {
     const buildWithConfig = (0, lodash_1.curry)(build)(config);
-    return {
-        createMutation: buildWithConfig("CREATE"),
-        updateMutation: buildWithConfig("UPDATE"),
-        replaceMutation: buildWithConfig("REPLACE"),
-        deleteMutation: buildWithConfig("DELETE"),
-    };
+    const formattedPaths = [];
+    if (Array.isArray(config.path)) {
+        config.path.forEach((path) => {
+            const singularPath = path.replace(/s$/, "");
+            formattedPaths.push(singularPath);
+        });
+    }
+    else {
+        const { path } = config;
+        const singularPath = path.replace(/s$/, "");
+        formattedPaths.push(singularPath);
+    }
+    const methods = formattedPaths.map((path) => ({
+        [(0, lodash_1.camelCase)(`create ${path} Mutation`)]: buildWithConfig("CREATE"),
+        [(0, lodash_1.camelCase)(`update ${path} Mutation`)]: buildWithConfig("UPDATE"),
+        [(0, lodash_1.camelCase)(`replace ${path} Mutation`)]: buildWithConfig("REPLACE"),
+        [(0, lodash_1.camelCase)(`delete ${path} Mutation`)]: buildWithConfig("DELETE"),
+    }));
+    return methods;
 }
 exports.buildMutation = buildMutation;
 function getMethodFromOperation(operation) {

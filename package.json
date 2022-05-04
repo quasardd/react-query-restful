@@ -1,6 +1,6 @@
 {
   "name": "rest-react-query",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Just a small collection of hooks that make it easy to integrate React Query into a REST API.",
   "repository": {
     "type": "git",
@@ -20,17 +20,15 @@
     "build:cjs": "tsc --module CommonJS --outDir dist/cjs"
   },
   "dependencies": {
-    "axios": "^0.27.2",
     "@react-native-async-storage/async-storage": "^1.17.3",
-    "lodash": "^4.17.21"
+    "axios": "^0.27.2",
+    "lodash": "^4.17.21",
+    "type-fest": "^2.12.2"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.182",
     "@types/node": "^17.0.31",
     "@types/react": "18.0.8",
-    "react": "^18.1.0",
-    "typescript": "^4.6.4",
-    "react-query": "^3.38.1",
     "@typescript-eslint/eslint-plugin": "^5.9.0",
     "@typescript-eslint/parser": "^5.9.0",
     "eslint": "^8.6.0",
@@ -44,7 +42,10 @@
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-unicorn": "^40.0.0",
-    "prettier": "^2.5.1"
+    "prettier": "^2.5.1",
+    "react": "^18.1.0",
+    "react-query": "^3.38.1",
+    "typescript": "^4.6.4"
   },
   "peerDependencies": {
     "react": "^18.1.0",

@@ -19,7 +19,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { curry } from "lodash";
+import { camelCase, curry } from "lodash";
 import { useMutation, useQueryClient } from "react-query";
 import { buildUrl, useRestContext } from "..";
 const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, }) => {
@@ -56,12 +56,25 @@ function build(config, operation) {
 }
 export function buildMutation(config) {
     const buildWithConfig = curry(build)(config);
-    return {
-        createMutation: buildWithConfig("CREATE"),
-        updateMutation: buildWithConfig("UPDATE"),
-        replaceMutation: buildWithConfig("REPLACE"),
-        deleteMutation: buildWithConfig("DELETE"),
-    };
+    const formattedPaths = [];
+    if (Array.isArray(config.path)) {
+        config.path.forEach((path) => {
+            const singularPath = path.replace(/s$/, "");
+            formattedPaths.push(singularPath);
+        });
+    }
+    else {
+        const { path } = config;
+        const singularPath = path.replace(/s$/, "");
+        formattedPaths.push(singularPath);
+    }
+    const methods = formattedPaths.map((path) => ({
+        [camelCase(`create ${path} Mutation`)]: buildWithConfig("CREATE"),
+        [camelCase(`update ${path} Mutation`)]: buildWithConfig("UPDATE"),
+        [camelCase(`replace ${path} Mutation`)]: buildWithConfig("REPLACE"),
+        [camelCase(`delete ${path} Mutation`)]: buildWithConfig("DELETE"),
+    }));
+    return methods;
 }
 function getMethodFromOperation(operation) {
     switch (operation) {

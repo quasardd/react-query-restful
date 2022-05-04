@@ -52,10 +52,11 @@ exports.RestClientProvider = RestClientProvider;
 const useRestContext = () => (0, react_1.useContext)(RestContext);
 exports.useRestContext = useRestContext;
 function buildUrl(path, append) {
+    const paths = Array.isArray(path) ? path.join("/") : path;
     if (append) {
-        return `${path}/${append}`;
+        return `${paths}/${append}`;
     }
-    return path;
+    return paths;
 }
 exports.buildUrl = buildUrl;
 //# sourceMappingURL=index.js.map
