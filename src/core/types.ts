@@ -14,10 +14,14 @@ export interface IRestContext {
 export interface IRestClientProviderProps {
   baseUrl: string;
   interceptors?: {
-    onRequest?: (config: AxiosRequestConfig) => AxiosRequestConfig;
-    onRequestError?: (error: AxiosError) => Promise<AxiosError>;
-    onResponse?: (config: AxiosResponse) => AxiosResponse;
-    onResponseError?: (error: AxiosError) => Promise<AxiosError>;
+    onRequest?: (
+      config: AxiosRequestConfig
+    ) => AxiosRequestConfig | Promise<AxiosRequestConfig>;
+    onRequestError?: (error: AxiosError) => Promise<AxiosError> | AxiosError;
+    onResponse?: (
+      config: AxiosResponse
+    ) => AxiosRequestConfig | Promise<AxiosRequestConfig>;
+    onResponseError?: (error: AxiosError) => Promise<AxiosError> | AxiosError;
   };
   axiosConfig?: AxiosRequestConfig;
   clientConfig?: QueryClientConfig;
