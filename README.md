@@ -79,7 +79,7 @@ function Example() {
 
 The `buildMutation` method will return a few functions, the name will be based on the informed paths.
 
-Exemple, the path `users` will generate the following functions:
+Example, the path `users` will generate the following functions:
 
 - `createUserMutation` (for POST request)
 - `updateUserMutation` (for PATCH request)
@@ -169,6 +169,40 @@ const App = ({ children }) => {
       baseUrl="http://localhost:3000/api/"
       {...getSimpleJwtAuth({ key: "user", path: "data.user.accessToken" })}
     >
+      {children}
+    </RestClientProvider>
+  );
+};
+```
+
+You can make your own custom authentication logic, example::
+
+```ts
+import { AsyncStorage } from "rest-react-query";
+
+export const myOwnLogic = ({ key, path }: { key: string; path: string }) => ({
+  interceptors: {
+    onRequest: async (config: any) => {
+      const cachedToken = await AsyncStorage.getItem("token");
+
+      if (cachedToken && config.headers) {
+        const parsedToken = JSON.parse(cachedToken);
+
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+
+      return config;
+    },
+  },
+});
+```
+
+And then pass it to the provider:
+
+```ts
+const App = ({ children }) => {
+  return (
+    <RestClientProvider baseUrl="http://localhost:3000/api/" {...myOwnLogic()}>
       {children}
     </RestClientProvider>
   );
