@@ -12,7 +12,7 @@ const Query = ({
 }: IQuery) => {
   const { axios } = useRestContext();
 
-  return useQuery({
+  return useQuery<any>({
     queryKey: [path, appendToUrl, params],
     queryFn: async () => {
       const response = await axios.request({
