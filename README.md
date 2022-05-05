@@ -256,7 +256,9 @@ When calling the result of the build at component level, you can pass again thes
 
 ## Running the tests
 
+```
 yarn && yarn test
+```
 
 ## Contributing
 
