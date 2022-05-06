@@ -14,15 +14,15 @@ export interface IMutation {
     cacheResponse?: {
         key: string;
     };
-    options?: Omit<UseMutationOptions<any, unknown, IMutationData | undefined, unknown>, "mutationFn"> | undefined;
+    options?: Omit<UseMutationOptions<any, unknown, IMutationData | void>, "mutationFn">;
 }
 export declare type IMutationConfig = Omit<IMutation, "operation">;
 export interface IBuildMutation<T> extends Omit<IMutation, "path" | "operation"> {
     path: T[] | T;
 }
-declare type ISingular<T extends string> = T extends `${infer Front}s` ? Capitalize<Front> : Capitalize<T>;
-declare type IMutationFn = (overrideConfig?: Partial<IMutationConfig>) => UseMutationResult<any, unknown, IMutationData | undefined, unknown>;
+declare type ISingular<T extends string> = T extends `${infer Front}s` ? PascalCase<Front> : PascalCase<T>;
+declare type IMutationFn = (overrideConfig?: Partial<IMutationConfig>) => UseMutationResult<any, unknown, IMutationData | void>;
 export declare type IBuildMutationReturnType<Path extends string> = {
-    [K in IOperationsMutations as `${Lowercase<IOperationsMutations>}${PascalCase<ISingular<Path>>}Mutation`]: IMutationFn;
+    [K in IOperationsMutations as `${Lowercase<IOperationsMutations>}${ISingular<Path>}Mutation`]: IMutationFn;
 };
 export {};

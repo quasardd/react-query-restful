@@ -15,12 +15,10 @@ export interface IMutation {
   cacheResponse?: {
     key: string;
   };
-  options?:
-    | Omit<
-        UseMutationOptions<any, unknown, IMutationData | undefined, unknown>,
-        "mutationFn"
-      >
-    | undefined;
+  options?: Omit<
+    UseMutationOptions<any, unknown, IMutationData | void>,
+    "mutationFn"
+  >;
 }
 
 export type IMutationConfig = Omit<IMutation, "operation">;
@@ -31,15 +29,13 @@ export interface IBuildMutation<T>
 }
 
 type ISingular<T extends string> = T extends `${infer Front}s`
-  ? Capitalize<Front>
-  : Capitalize<T>;
+  ? PascalCase<Front>
+  : PascalCase<T>;
 
 type IMutationFn = (
   overrideConfig?: Partial<IMutationConfig>
-) => UseMutationResult<any, unknown, IMutationData | undefined, unknown>;
+) => UseMutationResult<any, unknown, IMutationData | void>;
 
 export type IBuildMutationReturnType<Path extends string> = {
-  [K in IOperationsMutations as `${Lowercase<IOperationsMutations>}${PascalCase<
-    ISingular<Path>
-  >}Mutation`]: IMutationFn;
+  [K in IOperationsMutations as `${Lowercase<IOperationsMutations>}${ISingular<Path>}Mutation`]: IMutationFn;
 };

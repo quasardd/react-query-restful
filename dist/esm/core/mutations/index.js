@@ -70,10 +70,10 @@ export function buildMutation(config) {
     }
     const methods = {};
     formattedPaths.forEach((path) => {
-        methods[camelCase(`create ${path} Mutation`)] = buildWithConfig("CREATE");
-        methods[camelCase(`update ${path} Mutation`)] = buildWithConfig("UPDATE");
-        methods[camelCase(`replace ${path} Mutation`)] = buildWithConfig("REPLACE");
-        methods[camelCase(`delete ${path} Mutation`)] = buildWithConfig("DELETE");
+        methods[camelCase(`create ${path} mutation`)] = buildWithConfig("CREATE");
+        methods[camelCase(`update ${path} mutation`)] = buildWithConfig("UPDATE");
+        methods[camelCase(`replace ${path} mutation`)] = buildWithConfig("REPLACE");
+        methods[camelCase(`delete ${path} mutation`)] = buildWithConfig("DELETE");
     });
     return methods;
 }

@@ -43,7 +43,7 @@ describe("authentication", () => {
       }
     );
 
-    result.current.mutateAsync({});
+    result.current.mutateAsync();
 
     await waitForNextUpdate();
 
