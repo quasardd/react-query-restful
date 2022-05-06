@@ -1,6 +1,6 @@
-# REST React Query
+# React Query RESTful
 
-`rest-react-query` is just a small collection of hooks that make it easy to integrate [React Query](https://github.com/tannerlinsley/react-query) into a REST API.
+`react-query-restful` is just a small collection of hooks that make it easy to integrate [React Query](https://github.com/tannerlinsley/react-query) into a REST API.
 
 For a better understanding of the library, it is recommended to understand how React Query works.
 
@@ -13,19 +13,19 @@ Install with npm or yarn
 npm:
 
 ```
-npm i --save rest-react-query
+npm i --save react-query-restful
 ```
 
 yarn
 
 ```
-yarn add rest-react-query
+yarn add react-query-restful
 ```
 
 ## Inicialization
 
 ```ts
-import { RestClientProvider } from "rest-react-query";
+import { RestClientProvider } from "react-query-restful";
 
 export default function App() {
   return (
@@ -39,7 +39,7 @@ export default function App() {
 ## Query usage
 
 ```ts
-import { buildQuery } from "rest-react-query";
+import { buildQuery } from "react-query-restful";
 
 export const getUsersQuery = buildQuery({ path: "users" });
 
@@ -89,7 +89,7 @@ Example, the path `users` will generate the following functions:
 All will share the same path & configuration.
 
 ```ts
-import { buildMutation } from "rest-react-query";
+import { buildMutation } from "react-query-restful";
 
 export const {
   createUserMutation,
@@ -178,7 +178,7 @@ const App = ({ children }) => {
 You can make your own custom authentication logic, example:
 
 ```ts
-import { AsyncStorage } from "rest-react-query";
+import { AsyncStorage } from "react-query-restful";
 
 export const myOwnLogic = () => ({
   interceptors: {
@@ -269,7 +269,7 @@ Feel free to submit a PR.
 - **[Caio Henrique](https://github.com/Coystark)**
 - **[Marcel P Goes](https://github.com/glothos)**
 
-See also the list of [contributors](https://github.com/quasardd/rest-react-query/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/quasardd/react-query-restful/graphs/contributors) who participated in this project.
 
 Thanks to [Anurag Hazra](https://github.com/anuraghazra) for the TypeScript magic =).
 
