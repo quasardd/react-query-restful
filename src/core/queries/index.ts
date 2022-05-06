@@ -13,7 +13,7 @@ const Query = ({
   const { axios } = useRestContext();
 
   return useQuery<any>({
-    queryKey: [path, appendToUrl, params],
+    queryKey: [buildUrl(path, appendToUrl), params],
     queryFn: async () => {
       const response = await axios.request({
         method: "GET",

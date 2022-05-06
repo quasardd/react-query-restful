@@ -24,7 +24,7 @@ const Mutation = ({
   const { onSuccess, ...restOptions } = options || {};
 
   return useMutation(
-    async (variables: IMutationData) => {
+    async (variables?: IMutationData) => {
       const method = getMethodFromOperation(operation);
 
       const response = await axios.request({
@@ -45,7 +45,7 @@ const Mutation = ({
     {
       onSuccess: (data, variables, context) => {
         if (autoInvalidation) {
-          queryClient.invalidateQueries(path);
+          queryClient.invalidateQueries(buildUrl(path, variables?.appendToUrl));
         }
 
         if (invalidatePaths) {
