@@ -12,7 +12,7 @@ import { useQuery } from "react-query";
 import { buildUrl, useRestContext } from "..";
 const Query = ({ params, appendToUrl, path, options, cacheResponse, }) => {
     const { axios } = useRestContext();
-    return useQuery(Object.assign({ queryKey: [path, appendToUrl, params], queryFn: () => __awaiter(void 0, void 0, void 0, function* () {
+    return useQuery(Object.assign({ queryKey: [buildUrl(path, appendToUrl), params], queryFn: () => __awaiter(void 0, void 0, void 0, function* () {
             const response = yield axios.request({
                 method: "GET",
                 params,

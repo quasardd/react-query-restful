@@ -18,7 +18,7 @@ const react_query_1 = require("react-query");
 const __1 = require("..");
 const Query = ({ params, appendToUrl, path, options, cacheResponse, }) => {
     const { axios } = (0, __1.useRestContext)();
-    return (0, react_query_1.useQuery)(Object.assign({ queryKey: [path, appendToUrl, params], queryFn: () => __awaiter(void 0, void 0, void 0, function* () {
+    return (0, react_query_1.useQuery)(Object.assign({ queryKey: [(0, __1.buildUrl)(path, appendToUrl), params], queryFn: () => __awaiter(void 0, void 0, void 0, function* () {
             const response = yield axios.request({
                 method: "GET",
                 params,
