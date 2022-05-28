@@ -52,10 +52,16 @@ exports.RestClientProvider = RestClientProvider;
 const useRestContext = () => (0, react_1.useContext)(RestContext);
 exports.useRestContext = useRestContext;
 function buildUrl(path, append) {
-    const paths = Array.isArray(path) ? path.join("/") : path;
-    if (append) {
-        return `${paths}/${append}`;
+    let paths = Array.isArray(path) ? path.join("/") : path;
+    // Remove leading slash if present
+    if (paths.charAt(0) === "/") {
+        paths = paths.slice(1);
     }
+    if (append) {
+        paths = `${paths}/${append}`;
+    }
+    // Remove any double slashs from paths
+    paths = paths.replace(/\/\//g, "/");
     return paths;
 }
 exports.buildUrl = buildUrl;

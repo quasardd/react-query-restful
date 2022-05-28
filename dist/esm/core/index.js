@@ -21,10 +21,16 @@ export const RestClientProvider = ({ children, baseUrl, clientConfig, axiosConfi
 };
 export const useRestContext = () => useContext(RestContext);
 export function buildUrl(path, append) {
-    const paths = Array.isArray(path) ? path.join("/") : path;
-    if (append) {
-        return `${paths}/${append}`;
+    let paths = Array.isArray(path) ? path.join("/") : path;
+    // Remove leading slash if present
+    if (paths.charAt(0) === "/") {
+        paths = paths.slice(1);
     }
+    if (append) {
+        paths = `${paths}/${append}`;
+    }
+    // Remove any double slashs from paths
+    paths = paths.replace(/\/\//g, "/");
     return paths;
 }
 //# sourceMappingURL=index.js.map

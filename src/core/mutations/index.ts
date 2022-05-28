@@ -45,7 +45,7 @@ const Mutation = ({
     {
       onSuccess: (data, variables, context) => {
         if (autoInvalidation) {
-          queryClient.invalidateQueries(buildUrl(path, variables?.appendToUrl));
+          queryClient.invalidateQueries(buildUrl(path));
         }
 
         if (invalidatePaths) {

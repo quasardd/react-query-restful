@@ -39,7 +39,7 @@ const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, })
         return response.data;
     }), Object.assign({ onSuccess: (data, variables, context) => {
             if (autoInvalidation) {
-                queryClient.invalidateQueries(buildUrl(path, variables === null || variables === void 0 ? void 0 : variables.appendToUrl));
+                queryClient.invalidateQueries(buildUrl(path));
             }
             if (invalidatePaths) {
                 invalidatePaths.forEach((v) => {

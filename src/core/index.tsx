@@ -67,11 +67,19 @@ export const RestClientProvider: React.FC<
 export const useRestContext = () => useContext(RestContext);
 
 export function buildUrl(path: string[] | string, append?: string | number) {
-  const paths = Array.isArray(path) ? path.join("/") : path;
+  let paths = Array.isArray(path) ? path.join("/") : path;
+
+  // Remove leading slash if present
+  if (paths.charAt(0) === "/") {
+    paths = paths.slice(1);
+  }
 
   if (append) {
-    return `${paths}/${append}`;
+    paths = `${paths}/${append}`;
   }
+
+  // Remove any double slashs from paths
+  paths = paths.replace(/\/\//g, "/");
 
   return paths;
 }
