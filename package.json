@@ -1,6 +1,6 @@
 {
   "name": "react-query-restful",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "Just a small collection of hooks that make it easy to integrate React Query into a REST API.",
   "repository": {
     "type": "git",
