@@ -75,7 +75,7 @@ export function buildUrl(path: string[] | string, append?: string | number) {
   }
 
   if (append) {
-    paths = `${paths}/${append}`;
+    paths = `${paths}${append}`;
   }
 
   // Remove any double slashs from paths

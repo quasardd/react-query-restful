@@ -27,7 +27,7 @@ export function buildUrl(path, append) {
         paths = paths.slice(1);
     }
     if (append) {
-        paths = `${paths}/${append}`;
+        paths = `${paths}${append}`;
     }
     // Remove any double slashs from paths
     paths = paths.replace(/\/\//g, "/");
