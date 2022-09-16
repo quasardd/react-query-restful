@@ -57,4 +57,17 @@ describe("buildMutation", () => {
     expect(replaceSignInMutation).toBeDefined();
     expect(updateSignInMutation).toBeDefined();
   });
+
+  it("should create function with overrides", () => {
+    const createOverride = jest.fn();
+    const { createAuthMutation } = buildMutation({
+      path: ["auth", "sign-in"],
+      overrides: {
+        mutationFnOverrides: {
+          create: createOverride,
+        },
+      },
+    });
+    expect(createAuthMutation).toBeDefined();
+  });
 });

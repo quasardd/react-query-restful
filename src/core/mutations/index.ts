@@ -9,6 +9,7 @@ import {
   IMutation,
   IMutationData,
   IOperationsMutations,
+  MutationFnOverrides,
 } from "./types";
 
 const Mutation = ({
@@ -17,6 +18,7 @@ const Mutation = ({
   invalidatePaths,
   options,
   cacheResponse,
+  overrides,
 }: IMutation) => {
   const { axios, autoInvalidation } = useRestContext();
   const queryClient = useQueryClient();
@@ -26,12 +28,18 @@ const Mutation = ({
   return useMutation(
     async (variables?: IMutationData) => {
       const method = getMethodFromOperation(operation);
+      const requestFn =
+        overrides?.mutationFnOverrides?.[
+          getOverrideFnByOperationName(operation)
+        ];
 
-      const response = await axios.request({
-        method,
-        data: variables?.data,
-        url: buildUrl(path, variables?.appendToUrl),
-      });
+      const response = requestFn
+        ? await requestFn(axios, variables)
+        : await axios.request({
+            method,
+            data: variables?.data,
+            url: buildUrl(path, variables?.appendToUrl),
+          });
 
       if (cacheResponse) {
         await AsyncStorage.setItem(
@@ -113,4 +121,10 @@ function getMethodFromOperation(operation: IOperationsMutations) {
     default:
       return "POST";
   }
+}
+
+function getOverrideFnByOperationName(
+  operation: IOperationsMutations
+): keyof MutationFnOverrides {
+  return camelCase(operation) as keyof MutationFnOverrides;
 }
