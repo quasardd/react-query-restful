@@ -28,17 +28,21 @@ const async_storage_1 = __importDefault(require("@react-native-async-storage/asy
 const lodash_1 = require("lodash");
 const react_query_1 = require("react-query");
 const __1 = require("..");
-const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, }) => {
+const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, overrides, }) => {
     const { axios, autoInvalidation } = (0, __1.useRestContext)();
     const queryClient = (0, react_query_1.useQueryClient)();
     const _a = options || {}, { onSuccess } = _a, restOptions = __rest(_a, ["onSuccess"]);
     return (0, react_query_1.useMutation)((variables) => __awaiter(void 0, void 0, void 0, function* () {
+        var _b;
         const method = getMethodFromOperation(operation);
-        const response = yield axios.request({
-            method,
-            data: variables === null || variables === void 0 ? void 0 : variables.data,
-            url: (0, __1.buildUrl)(path, variables === null || variables === void 0 ? void 0 : variables.appendToUrl),
-        });
+        const requestFn = (_b = overrides === null || overrides === void 0 ? void 0 : overrides.mutationFnOverrides) === null || _b === void 0 ? void 0 : _b[getOverrideFnByOperationName(operation)];
+        const response = requestFn
+            ? yield requestFn(axios, variables)
+            : yield axios.request({
+                method,
+                data: variables === null || variables === void 0 ? void 0 : variables.data,
+                url: (0, __1.buildUrl)(path, variables === null || variables === void 0 ? void 0 : variables.appendToUrl),
+            });
         if (cacheResponse) {
             yield async_storage_1.default.setItem(cacheResponse.key, JSON.stringify(response.data));
         }
@@ -96,5 +100,8 @@ function getMethodFromOperation(operation) {
         default:
             return "POST";
     }
+}
+function getOverrideFnByOperationName(operation) {
+    return (0, lodash_1.camelCase)(operation);
 }
 //# sourceMappingURL=index.js.map

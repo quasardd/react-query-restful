@@ -1,7 +1,17 @@
+import { AxiosInstance } from "axios";
 import { UseMutationOptions, UseMutationResult } from "react-query";
 import type { PascalCase } from "type-fest";
 
 export type IOperationsMutations = "CREATE" | "UPDATE" | "REPLACE" | "DELETE";
+export type MutationFnOverrides = {
+  create?: (api: AxiosInstance, variables?: IMutationData) => Promise<any>;
+  update?: (api: AxiosInstance, variables?: IMutationData) => Promise<any>;
+  replace?: (api: AxiosInstance, variables?: IMutationData) => Promise<any>;
+  delete?: (api: AxiosInstance, variables?: IMutationData) => Promise<any>;
+};
+export type Overrides = {
+  mutationFnOverrides?: MutationFnOverrides;
+};
 
 export interface IMutationData {
   data?: { [key: string]: any };
@@ -19,6 +29,7 @@ export interface IMutation {
     UseMutationOptions<any, unknown, IMutationData | void>,
     "mutationFn"
   >;
+  overrides?: Overrides;
 }
 
 export type IMutationConfig = Omit<IMutation, "operation">;
