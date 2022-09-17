@@ -3,7 +3,6 @@ import { camelCase, curry } from "lodash";
 import { useMutation, useQueryClient } from "react-query";
 import { buildUrl, useRestContext } from "..";
 import {
-  IBuildMutationReturnType,
   IMutationConfig,
   IBuildMutation,
   IMutation,
@@ -28,6 +27,7 @@ const Mutation = ({
   return useMutation(
     async (variables?: IMutationData) => {
       const method = getMethodFromOperation(operation);
+
       const requestFn =
         overrides?.mutationFnOverrides?.[
           getOverrideFnByOperationName(operation)
@@ -76,37 +76,15 @@ function build(config: IMutationConfig, operation: IOperationsMutations) {
     Mutation({ ...config, operation, ...overrideConfig });
 }
 
-export function buildMutation<T extends string>(
-  config: IBuildMutation<T>
-): IBuildMutationReturnType<T> {
+export function buildMutation(config: IBuildMutation) {
   const buildWithConfig = curry(build)(config);
 
-  const formattedPaths = [] as string[];
-
-  if (Array.isArray(config.path)) {
-    config.path.forEach((path) => {
-      const singularPath = path.replace(/s$/, "");
-
-      formattedPaths.push(singularPath);
-    });
-  } else {
-    const { path } = config;
-
-    const singularPath = path.replace(/s$/, "");
-
-    formattedPaths.push(singularPath);
-  }
-
-  const methods = {} as { [key: string]: any };
-
-  formattedPaths.forEach((path) => {
-    methods[camelCase(`create ${path} mutation`)] = buildWithConfig("CREATE");
-    methods[camelCase(`update ${path} mutation`)] = buildWithConfig("UPDATE");
-    methods[camelCase(`replace ${path} mutation`)] = buildWithConfig("REPLACE");
-    methods[camelCase(`delete ${path} mutation`)] = buildWithConfig("DELETE");
-  });
-
-  return methods;
+  return {
+    createMutation: buildWithConfig("CREATE"),
+    updateMutation: buildWithConfig("UPDATE"),
+    replaceMutation: buildWithConfig("REPLACE"),
+    deleteMutation: buildWithConfig("DELETE"),
+  };
 }
 
 function getMethodFromOperation(operation: IOperationsMutations) {

@@ -20,14 +20,10 @@ mock.onDelete("/vehicles/1").reply(200);
 mock.onPatch("/vehicles/2").reply(200);
 mock.onPut("/vehicles/3").reply(200);
 
-const {
-  createVehicleMutation,
-  updateVehicleMutation,
-  replaceVehicleMutation,
-  deleteVehicleMutation,
-} = buildMutation({
-  path: "vehicles",
-});
+const { createMutation, updateMutation, replaceMutation, deleteMutation } =
+  buildMutation({
+    path: "vehicles",
+  });
 
 const customCreateSignature = jest
   .fn()
@@ -43,10 +39,10 @@ const customDeleteSignature = jest
   .mockImplementation((_: AxiosInstance, data: any) => data);
 
 const {
-  createVehicleMutation: customCreate,
-  updateVehicleMutation: customUpdate,
-  replaceVehicleMutation: customReplace,
-  deleteVehicleMutation: customDelete,
+  createMutation: customCreate,
+  updateMutation: customUpdate,
+  replaceMutation: customReplace,
+  deleteMutation: customDelete,
 } = buildMutation({
   path: "vehicles",
   overrides: {
@@ -66,12 +62,9 @@ describe("useMutation", () => {
   });
 
   it("should fetch POST /vehicles", async () => {
-    const { result, waitForNextUpdate } = renderHook(
-      () => createVehicleMutation(),
-      {
-        wrapper,
-      }
-    );
+    const { result, waitForNextUpdate } = renderHook(() => createMutation(), {
+      wrapper,
+    });
 
     result.current.mutateAsync();
 
@@ -82,7 +75,7 @@ describe("useMutation", () => {
 
   it("should fetch POST /vehicles/wheels and cache the response", async () => {
     const { result, waitForNextUpdate } = renderHook(
-      () => createVehicleMutation({ cacheResponse: { key: "wheels" } }),
+      () => createMutation({ cacheResponse: { key: "wheels" } }),
       {
         wrapper,
       }
@@ -99,12 +92,9 @@ describe("useMutation", () => {
   });
 
   it("should fetch DELETE /vehicles/1", async () => {
-    const { result, waitForNextUpdate } = renderHook(
-      () => deleteVehicleMutation(),
-      {
-        wrapper,
-      }
-    );
+    const { result, waitForNextUpdate } = renderHook(() => deleteMutation(), {
+      wrapper,
+    });
 
     result.current.mutateAsync({ appendToUrl: "1" });
 
@@ -114,12 +104,9 @@ describe("useMutation", () => {
   });
 
   it("should fetch PATCH /vehicles/2", async () => {
-    const { result, waitForNextUpdate } = renderHook(
-      () => updateVehicleMutation(),
-      {
-        wrapper,
-      }
-    );
+    const { result, waitForNextUpdate } = renderHook(() => updateMutation(), {
+      wrapper,
+    });
 
     result.current.mutateAsync({ appendToUrl: "2" });
 
@@ -129,12 +116,9 @@ describe("useMutation", () => {
   });
 
   it("should fetch PUT /vehicles/3", async () => {
-    const { result, waitForNextUpdate } = renderHook(
-      () => replaceVehicleMutation(),
-      {
-        wrapper,
-      }
-    );
+    const { result, waitForNextUpdate } = renderHook(() => replaceMutation(), {
+      wrapper,
+    });
 
     result.current.mutateAsync({ appendToUrl: "3" });
 

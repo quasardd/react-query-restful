@@ -24,7 +24,7 @@ mock
 
 const getUsersQuery = buildQuery({ path: "users" });
 
-const { createSignInMutation } = buildMutation({
+const { createMutation } = buildMutation({
   path: ["auth", "sign-in"],
   cacheResponse: { key: "user" },
 });
@@ -36,12 +36,9 @@ describe("authentication", () => {
   });
 
   it("should authenticate yourself", async () => {
-    const { result, waitForNextUpdate } = renderHook(
-      () => createSignInMutation(),
-      {
-        wrapper,
-      }
-    );
+    const { result, waitForNextUpdate } = renderHook(() => createMutation(), {
+      wrapper,
+    });
 
     result.current.mutateAsync();
 
