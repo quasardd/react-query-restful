@@ -4,10 +4,10 @@ import type { PascalCase } from "type-fest";
 
 export type IOperationsMutations = "CREATE" | "UPDATE" | "REPLACE" | "DELETE";
 export type MutationFnOverrides = {
-  create?: (api: AxiosInstance, data?: IMutationData) => Promise<any>;
-  update?: (api: AxiosInstance, data?: IMutationData) => Promise<any>;
-  replace?: (api: AxiosInstance, data?: IMutationData) => Promise<any>;
-  delete?: (api: AxiosInstance, data?: IMutationData) => Promise<any>;
+  create?: (api: AxiosInstance, variables?: IMutationData) => Promise<any>;
+  update?: (api: AxiosInstance, variables?: IMutationData) => Promise<any>;
+  replace?: (api: AxiosInstance, variables?: IMutationData) => Promise<any>;
+  delete?: (api: AxiosInstance, variables?: IMutationData) => Promise<any>;
 };
 export type Overrides = {
   mutationFnOverrides?: MutationFnOverrides;
