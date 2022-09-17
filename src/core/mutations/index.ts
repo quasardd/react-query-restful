@@ -3,7 +3,6 @@ import { camelCase, curry } from "lodash";
 import { useMutation, useQueryClient } from "react-query";
 import { buildUrl, useRestContext } from "..";
 import {
-  IMutationConfig,
   IBuildMutation,
   IMutation,
   IMutationData,
@@ -18,6 +17,8 @@ const Mutation = ({
   options,
   cacheResponse,
   overrides,
+  appendToUrl,
+  query,
 }: IMutation) => {
   const { axios, autoInvalidation } = useRestContext();
   const queryClient = useQueryClient();
@@ -38,7 +39,11 @@ const Mutation = ({
         : await axios.request({
             method,
             data: variables?.data,
-            url: buildUrl(path, variables?.appendToUrl),
+            url: buildUrl({
+              path,
+              query: variables?.query ?? query,
+              append: variables?.appendToUrl ?? appendToUrl,
+            }),
           });
 
       if (cacheResponse) {
@@ -51,9 +56,22 @@ const Mutation = ({
       return response.data;
     },
     {
-      onSuccess: (data, variables, context) => {
+      onSuccess: async (data, variables, context) => {
         if (autoInvalidation) {
-          queryClient.invalidateQueries(buildUrl(path));
+          /**
+           * In a scenario where we have a query /users and a mutation /users/[id]
+           * we want to invalidate the query /users when the mutation is /users/[id]
+           */
+
+          if (Array.isArray(path)) {
+            // A wildcart contains a [id] or [slug] or [whatever]
+            const isWildcard = path.some((p) => p.includes("["));
+            if (!isWildcard) {
+              queryClient.invalidateQueries(path);
+            }
+          } else {
+            queryClient.invalidateQueries(path);
+          }
         }
 
         if (invalidatePaths) {
@@ -71,8 +89,8 @@ const Mutation = ({
   );
 };
 
-function build(config: IMutationConfig, operation: IOperationsMutations) {
-  return (overrideConfig?: Partial<IMutationConfig>) =>
+function build(config: IBuildMutation, operation: IOperationsMutations) {
+  return (overrideConfig?: Partial<IBuildMutation>) =>
     Mutation({ ...config, operation, ...overrideConfig });
 }
 

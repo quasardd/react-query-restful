@@ -15,10 +15,11 @@ export type Overrides = {
   mutationFnOverrides?: MutationFnOverrides;
 };
 
-export type IMutationData = {
-  data?: { [key: string]: any };
-  appendToUrl?: string | number;
-} | void;
+export type IMutationData =
+  | (Pick<IMutation, "appendToUrl" | "query"> & {
+      data?: { [key: string]: any };
+    })
+  | void;
 
 export interface IMutation {
   path: string | string[];
@@ -29,10 +30,10 @@ export interface IMutation {
   };
   options?: Omit<UseMutationOptions<any, unknown, IMutationData>, "mutationFn">;
   overrides?: Overrides;
+  query?: {
+    [key: string]: any;
+  };
+  appendToUrl?: string | number;
 }
 
-export type IMutationConfig = Omit<IMutation, "operation">;
-
-export interface IBuildMutation extends Omit<IMutation, "path" | "operation"> {
-  path: string | string[];
-}
+export interface IBuildMutation extends Omit<IMutation, "operation"> {}

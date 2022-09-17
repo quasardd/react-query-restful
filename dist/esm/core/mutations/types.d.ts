@@ -1,22 +1,20 @@
 import { AxiosInstance } from "axios";
-import { UseMutationOptions, UseMutationResult } from "react-query";
-import type { PascalCase } from "type-fest";
+import { UseMutationOptions } from "react-query";
 export declare type IOperationsMutations = "CREATE" | "UPDATE" | "REPLACE" | "DELETE";
 export declare type MutationFnOverrides = {
-    create?: (api: AxiosInstance, data?: IMutationData) => Promise<any>;
-    update?: (api: AxiosInstance, data?: IMutationData) => Promise<any>;
-    replace?: (api: AxiosInstance, data?: IMutationData) => Promise<any>;
-    delete?: (api: AxiosInstance, data?: IMutationData) => Promise<any>;
+    create?: (api: AxiosInstance, variables?: IMutationData) => Promise<any>;
+    update?: (api: AxiosInstance, variables?: IMutationData) => Promise<any>;
+    replace?: (api: AxiosInstance, variables?: IMutationData) => Promise<any>;
+    delete?: (api: AxiosInstance, variables?: IMutationData) => Promise<any>;
 };
 export declare type Overrides = {
     mutationFnOverrides?: MutationFnOverrides;
 };
-export interface IMutationData {
+export declare type IMutationData = (Pick<IMutation, "appendToUrl" | "query"> & {
     data?: {
         [key: string]: any;
     };
-    appendToUrl?: string | number;
-}
+}) | void;
 export interface IMutation {
     path: string | string[];
     operation: IOperationsMutations;
@@ -24,16 +22,12 @@ export interface IMutation {
     cacheResponse?: {
         key: string;
     };
-    options?: Omit<UseMutationOptions<any, unknown, IMutationData | void>, "mutationFn">;
+    options?: Omit<UseMutationOptions<any, unknown, IMutationData>, "mutationFn">;
     overrides?: Overrides;
+    query?: {
+        [key: string]: any;
+    };
+    appendToUrl?: string | number;
 }
-export declare type IMutationConfig = Omit<IMutation, "operation">;
-export interface IBuildMutation<T> extends Omit<IMutation, "path" | "operation"> {
-    path: T[] | T;
+export interface IBuildMutation extends Omit<IMutation, "operation"> {
 }
-declare type ISingular<T extends string> = T extends `${infer Front}s` ? PascalCase<Front> : PascalCase<T>;
-declare type IMutationFn = (overrideConfig?: Partial<IMutationConfig>) => UseMutationResult<any, unknown, IMutationData | void>;
-export declare type IBuildMutationReturnType<Path extends string> = {
-    [K in IOperationsMutations as `${Lowercase<IOperationsMutations>}${ISingular<Path>}Mutation`]: IMutationFn;
-};
-export {};

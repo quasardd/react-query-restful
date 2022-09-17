@@ -49,7 +49,7 @@ describe("authentication", () => {
 
   it("now should be able to fetch users/messages", async () => {
     const { result, waitFor } = renderHook(
-      () => getUsersQuery({ appendToUrl: "messages" }),
+      () => getUsersQuery({ appendToUrl: "/messages" }),
       { wrapper }
     );
 

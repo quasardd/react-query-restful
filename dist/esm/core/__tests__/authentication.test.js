@@ -24,7 +24,7 @@ mock
 }))
     .reply(200);
 const getUsersQuery = buildQuery({ path: "users" });
-const { createSignInMutation } = buildMutation({
+const { createMutation } = buildMutation({
     path: ["auth", "sign-in"],
     cacheResponse: { key: "user" },
 });
@@ -34,7 +34,7 @@ describe("authentication", () => {
         yield AsyncStorage.removeItem("user");
     }));
     it("should authenticate yourself", () => __awaiter(void 0, void 0, void 0, function* () {
-        const { result, waitForNextUpdate } = renderHook(() => createSignInMutation(), {
+        const { result, waitForNextUpdate } = renderHook(() => createMutation(), {
             wrapper,
         });
         result.current.mutateAsync();
@@ -42,7 +42,7 @@ describe("authentication", () => {
         expect(result.current.isSuccess).toBe(true);
     }));
     it("now should be able to fetch users/messages", () => __awaiter(void 0, void 0, void 0, function* () {
-        const { result, waitFor } = renderHook(() => getUsersQuery({ appendToUrl: "messages" }), { wrapper });
+        const { result, waitFor } = renderHook(() => getUsersQuery({ appendToUrl: "/messages" }), { wrapper });
         yield waitFor(() => result.current.isSuccess);
         expect(result.current.status).toEqual("success");
     }));

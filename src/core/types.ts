@@ -27,3 +27,11 @@ export interface IRestClientProviderProps {
   clientConfig?: QueryClientConfig;
   autoInvalidation?: boolean;
 }
+
+export interface IBuildUrl {
+  path: string | string[];
+  append?: string | number;
+  query?: {
+    [key: string]: any;
+  };
+}

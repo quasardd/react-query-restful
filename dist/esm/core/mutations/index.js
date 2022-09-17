@@ -22,12 +22,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { camelCase, curry } from "lodash";
 import { useMutation, useQueryClient } from "react-query";
 import { buildUrl, useRestContext } from "..";
-const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, overrides, }) => {
+const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, overrides, appendToUrl, query, }) => {
     const { axios, autoInvalidation } = useRestContext();
     const queryClient = useQueryClient();
     const _a = options || {}, { onSuccess } = _a, restOptions = __rest(_a, ["onSuccess"]);
     return useMutation((variables) => __awaiter(void 0, void 0, void 0, function* () {
-        var _b;
+        var _b, _c, _d;
         const method = getMethodFromOperation(operation);
         const requestFn = (_b = overrides === null || overrides === void 0 ? void 0 : overrides.mutationFnOverrides) === null || _b === void 0 ? void 0 : _b[getOverrideFnByOperationName(operation)];
         const response = requestFn
@@ -35,15 +35,32 @@ const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, ov
             : yield axios.request({
                 method,
                 data: variables === null || variables === void 0 ? void 0 : variables.data,
-                url: buildUrl(path, variables === null || variables === void 0 ? void 0 : variables.appendToUrl),
+                url: buildUrl({
+                    path,
+                    query: (_c = variables === null || variables === void 0 ? void 0 : variables.query) !== null && _c !== void 0 ? _c : query,
+                    append: (_d = variables === null || variables === void 0 ? void 0 : variables.appendToUrl) !== null && _d !== void 0 ? _d : appendToUrl,
+                }),
             });
         if (cacheResponse) {
             yield AsyncStorage.setItem(cacheResponse.key, JSON.stringify(response.data));
         }
         return response.data;
-    }), Object.assign({ onSuccess: (data, variables, context) => {
+    }), Object.assign({ onSuccess: (data, variables, context) => __awaiter(void 0, void 0, void 0, function* () {
             if (autoInvalidation) {
-                queryClient.invalidateQueries(buildUrl(path));
+                /**
+                 * In a scenario where we have a query /users and a mutation /users/[id]
+                 * we want to invalidate the query /users when the mutation is /users/[id]
+                 */
+                if (Array.isArray(path)) {
+                    // A wildcart contains a [id] or [slug] or [whatever]
+                    const isWildcard = path.some((p) => p.includes("["));
+                    if (!isWildcard) {
+                        queryClient.invalidateQueries(path);
+                    }
+                }
+                else {
+                    queryClient.invalidateQueries(path);
+                }
             }
             if (invalidatePaths) {
                 invalidatePaths.forEach((v) => {
@@ -53,33 +70,19 @@ const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, ov
             if (onSuccess) {
                 onSuccess(data, variables, context);
             }
-        } }, restOptions));
+        }) }, restOptions));
 };
 function build(config, operation) {
     return (overrideConfig) => Mutation(Object.assign(Object.assign(Object.assign({}, config), { operation }), overrideConfig));
 }
 export function buildMutation(config) {
     const buildWithConfig = curry(build)(config);
-    const formattedPaths = [];
-    if (Array.isArray(config.path)) {
-        config.path.forEach((path) => {
-            const singularPath = path.replace(/s$/, "");
-            formattedPaths.push(singularPath);
-        });
-    }
-    else {
-        const { path } = config;
-        const singularPath = path.replace(/s$/, "");
-        formattedPaths.push(singularPath);
-    }
-    const methods = {};
-    formattedPaths.forEach((path) => {
-        methods[camelCase(`create ${path} mutation`)] = buildWithConfig("CREATE");
-        methods[camelCase(`update ${path} mutation`)] = buildWithConfig("UPDATE");
-        methods[camelCase(`replace ${path} mutation`)] = buildWithConfig("REPLACE");
-        methods[camelCase(`delete ${path} mutation`)] = buildWithConfig("DELETE");
-    });
-    return methods;
+    return {
+        createMutation: buildWithConfig("CREATE"),
+        updateMutation: buildWithConfig("UPDATE"),
+        replaceMutation: buildWithConfig("REPLACE"),
+        deleteMutation: buildWithConfig("DELETE"),
+    };
 }
 function getMethodFromOperation(operation) {
     switch (operation) {

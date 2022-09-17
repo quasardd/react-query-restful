@@ -24,11 +24,15 @@ describe("invalidation", () => {
         yield queryClient.refetchQueries({ queryKey: "users" });
         expect(queryFn).toHaveBeenCalledTimes(2);
     }));
-    // not working
     it.skip("should invalidate", () => __awaiter(void 0, void 0, void 0, function* () {
         const queryFn = jest.fn();
-        yield queryClient.fetchQuery(["users/vehicles", { page: 1 }], queryFn);
-        yield queryClient.refetchQueries({ queryKey: ["users", "vehicles"] });
+        /**
+         * Use case:
+         *
+         * A mutation users/[id] is called, which invalidates the query users/[id] and also users
+         */
+        yield queryClient.fetchQuery([["users", "[id]"], { id: 2 }], queryFn);
+        yield queryClient.refetchQueries({ queryKey: ["users"] });
         expect(queryFn).toHaveBeenCalledTimes(2);
     }));
     it("should invalidate", () => __awaiter(void 0, void 0, void 0, function* () {

@@ -20,10 +20,13 @@ mock.onDelete("/vehicles/1").reply(200);
 mock.onPatch("/vehicles/2").reply(200);
 mock.onPut("/vehicles/3").reply(200);
 
-const { createMutation, updateMutation, replaceMutation, deleteMutation } =
-  buildMutation({
-    path: "vehicles",
-  });
+const { createMutation } = buildMutation({
+  path: "vehicles",
+});
+
+const { updateMutation, replaceMutation, deleteMutation } = buildMutation({
+  path: ["vehicles", "[id]"],
+});
 
 const customCreateSignature = jest
   .fn()
@@ -75,13 +78,17 @@ describe("useMutation", () => {
 
   it("should fetch POST /vehicles/wheels and cache the response", async () => {
     const { result, waitForNextUpdate } = renderHook(
-      () => createMutation({ cacheResponse: { key: "wheels" } }),
+      () =>
+        createMutation({
+          appendToUrl: "/wheels",
+          cacheResponse: { key: "wheels" },
+        }),
       {
         wrapper,
       }
     );
 
-    result.current.mutateAsync({ appendToUrl: "wheels" });
+    result.current.mutateAsync();
 
     await waitForNextUpdate();
 
@@ -92,11 +99,14 @@ describe("useMutation", () => {
   });
 
   it("should fetch DELETE /vehicles/1", async () => {
-    const { result, waitForNextUpdate } = renderHook(() => deleteMutation(), {
-      wrapper,
-    });
+    const { result, waitForNextUpdate } = renderHook(
+      () => deleteMutation({ query: { id: 1 } }),
+      {
+        wrapper,
+      }
+    );
 
-    result.current.mutateAsync({ appendToUrl: "1" });
+    result.current.mutateAsync();
 
     await waitForNextUpdate();
 
@@ -108,7 +118,11 @@ describe("useMutation", () => {
       wrapper,
     });
 
-    result.current.mutateAsync({ appendToUrl: "2" });
+    result.current.mutateAsync({
+      query: {
+        id: 2,
+      },
+    });
 
     await waitForNextUpdate();
 
@@ -120,7 +134,7 @@ describe("useMutation", () => {
       wrapper,
     });
 
-    result.current.mutateAsync({ appendToUrl: "3" });
+    result.current.mutateAsync({ query: { id: 3 } });
 
     await waitForNextUpdate();
 
