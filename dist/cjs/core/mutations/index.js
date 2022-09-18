@@ -58,11 +58,11 @@ const Mutation = ({ operation, path, invalidatePaths, options, cacheResponse, ov
                  * we want to invalidate the query /users when the mutation is /users/[id]
                  */
                 if (Array.isArray(path)) {
-                    // A wildcart contains a [id] or [slug] or [whatever]
-                    const isWildcard = path.some((p) => p.includes("["));
-                    if (!isWildcard) {
-                        queryClient.invalidateQueries(path);
-                    }
+                    path.forEach((v) => {
+                        if (!(0, __1.isStringAWildcard)(v)) {
+                            queryClient.invalidateQueries(v);
+                        }
+                    });
                 }
                 else {
                     queryClient.invalidateQueries(path);

@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.buildUrl = exports.useRestContext = exports.RestClientProvider = void 0;
+exports.isStringAWildcard = exports.buildUrl = exports.useRestContext = exports.RestClientProvider = void 0;
 const react_1 = __importStar(require("react"));
 const react_query_1 = require("react-query");
 const axios_1 = __importDefault(require("axios"));
@@ -69,4 +69,9 @@ function buildUrl({ path, append, query }) {
     return paths;
 }
 exports.buildUrl = buildUrl;
+// A wildcard contains a [id] or [slug] or [whatever]
+function isStringAWildcard(str) {
+    return str.startsWith("[") && str.endsWith("]");
+}
+exports.isStringAWildcard = isStringAWildcard;
 //# sourceMappingURL=index.js.map
