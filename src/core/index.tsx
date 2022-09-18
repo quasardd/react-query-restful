@@ -88,3 +88,8 @@ export function buildUrl({ path, append, query }: IBuildUrl) {
 
   return paths;
 }
+
+// A wildcard contains a [id] or [slug] or [whatever]
+export function isStringAWildcard(str: string) {
+  return str.startsWith("[") && str.endsWith("]");
+}

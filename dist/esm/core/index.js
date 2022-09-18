@@ -37,4 +37,8 @@ export function buildUrl({ path, append, query }) {
     paths = paths.replace(/\/\//g, "/");
     return paths;
 }
+// A wildcard contains a [id] or [slug] or [whatever]
+export function isStringAWildcard(str) {
+    return str.startsWith("[") && str.endsWith("]");
+}
 //# sourceMappingURL=index.js.map

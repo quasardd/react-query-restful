@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { camelCase, curry } from "lodash";
 import { useMutation, useQueryClient } from "react-query";
-import { buildUrl, useRestContext } from "..";
+import { buildUrl, isStringAWildcard, useRestContext } from "..";
 import {
   IBuildMutation,
   IMutation,
@@ -62,13 +62,12 @@ const Mutation = ({
            * In a scenario where we have a query /users and a mutation /users/[id]
            * we want to invalidate the query /users when the mutation is /users/[id]
            */
-
           if (Array.isArray(path)) {
-            // A wildcart contains a [id] or [slug] or [whatever]
-            const isWildcard = path.some((p) => p.includes("["));
-            if (!isWildcard) {
-              queryClient.invalidateQueries(path);
-            }
+            path.forEach((v) => {
+              if (!isStringAWildcard(v)) {
+                queryClient.invalidateQueries(v);
+              }
+            });
           } else {
             queryClient.invalidateQueries(path);
           }
