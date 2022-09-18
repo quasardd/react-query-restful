@@ -32,7 +32,7 @@ describe("useQuery", () => {
     expect(result.current.data).toEqual([{ id: 1, name: "John Smith" }]);
   });
 
-  it("should fetch GET /users/1", async () => {
+  it("should fetch GET /users/2", async () => {
     const { result, waitFor } = renderHook(
       () => getReadUserQuery({ query: { id: 2 } }),
       { wrapper }

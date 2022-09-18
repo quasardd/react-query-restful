@@ -113,7 +113,7 @@ describe("useMutation", () => {
     expect(result.current.isSuccess).toBe(true);
   });
 
-  it("should fetch PATCH /vehicles/2", async () => {
+  it("should fetch PATCH /vehicles/2 specifying the query inside mutateAsync", async () => {
     const { result, waitForNextUpdate } = renderHook(() => updateMutation(), {
       wrapper,
     });
@@ -129,7 +129,7 @@ describe("useMutation", () => {
     expect(result.current.isSuccess).toBe(true);
   });
 
-  it("should fetch PUT /vehicles/3", async () => {
+  it("should fetch PUT /vehicles/3 specifying the query inside mutateAsync", async () => {
     const { result, waitForNextUpdate } = renderHook(() => replaceMutation(), {
       wrapper,
     });
