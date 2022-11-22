@@ -1,35 +1,25 @@
 import { buildMutation } from "../mutations";
 describe("buildMutation", () => {
-    it("should build a mutation with only one path", () => {
-        const { createUserMutation, deleteUserMutation, updateUserMutation, replaceUserMutation, } = buildMutation({
+    it("should build a mutation", () => {
+        const { createMutation, deleteMutation, updateMutation, replaceMutation } = buildMutation({
             path: "users",
         });
-        expect(createUserMutation).toBeDefined();
-        expect(deleteUserMutation).toBeDefined();
-        expect(updateUserMutation).toBeDefined();
-        expect(replaceUserMutation).toBeDefined();
+        expect(createMutation).toBeDefined();
+        expect(deleteMutation).toBeDefined();
+        expect(updateMutation).toBeDefined();
+        expect(replaceMutation).toBeDefined();
     });
-    it("should build a mutation with only one path as a array", () => {
-        const { createUserMutation, deleteUserMutation, updateUserMutation, replaceUserMutation, } = buildMutation({
-            path: ["users"],
-        });
-        expect(createUserMutation).toBeDefined();
-        expect(deleteUserMutation).toBeDefined();
-        expect(updateUserMutation).toBeDefined();
-        expect(replaceUserMutation).toBeDefined();
-    });
-    it("should build a mutation with two paths", () => {
-        const { createAuthMutation, deleteAuthMutation, updateAuthMutation, replaceAuthMutation, createSignInMutation, deleteSignInMutation, replaceSignInMutation, updateSignInMutation, } = buildMutation({
+    it("should create function with overrides", () => {
+        const createOverride = jest.fn();
+        const { createMutation } = buildMutation({
             path: ["auth", "sign-in"],
+            overrides: {
+                mutationFnOverrides: {
+                    create: createOverride,
+                },
+            },
         });
-        expect(createAuthMutation).toBeDefined();
-        expect(deleteAuthMutation).toBeDefined();
-        expect(updateAuthMutation).toBeDefined();
-        expect(replaceAuthMutation).toBeDefined();
-        expect(createSignInMutation).toBeDefined();
-        expect(deleteSignInMutation).toBeDefined();
-        expect(replaceSignInMutation).toBeDefined();
-        expect(updateSignInMutation).toBeDefined();
+        expect(createMutation).toBeDefined();
     });
 });
 //# sourceMappingURL=build-mutation.test.js.map

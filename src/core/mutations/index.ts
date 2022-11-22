@@ -1,10 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { camelCase, curry } from "lodash";
 import { useMutation, useQueryClient } from "react-query";
-import { buildUrl, useRestContext } from "..";
+import { buildUrl, isStringAWildcard, useRestContext } from "..";
 import {
-  IBuildMutationReturnType,
-  IMutationConfig,
   IBuildMutation,
   IMutation,
   IMutationData,
@@ -19,6 +17,8 @@ const Mutation = ({
   options,
   cacheResponse,
   overrides,
+  appendToUrl,
+  query,
 }: IMutation) => {
   const { axios, autoInvalidation } = useRestContext();
   const queryClient = useQueryClient();
@@ -28,6 +28,7 @@ const Mutation = ({
   return useMutation(
     async (variables?: IMutationData) => {
       const method = getMethodFromOperation(operation);
+
       const requestFn =
         overrides?.mutationFnOverrides?.[
           getOverrideFnByOperationName(operation)
@@ -38,7 +39,11 @@ const Mutation = ({
         : await axios.request({
             method,
             data: variables?.data,
-            url: buildUrl(path, variables?.appendToUrl),
+            url: buildUrl({
+              path,
+              query: variables?.query ?? query,
+              append: variables?.appendToUrl ?? appendToUrl,
+            }),
           });
 
       if (cacheResponse) {
@@ -51,9 +56,21 @@ const Mutation = ({
       return response.data;
     },
     {
-      onSuccess: (data, variables, context) => {
+      onSuccess: async (data, variables, context) => {
         if (autoInvalidation) {
-          queryClient.invalidateQueries(buildUrl(path));
+          /**
+           * In a scenario where we have a query /users and a mutation /users/[id]
+           * we want to invalidate the query /users when the mutation is /users/[id]
+           */
+          if (Array.isArray(path)) {
+            path.forEach((v) => {
+              if (!isStringAWildcard(v)) {
+                queryClient.invalidateQueries(v);
+              }
+            });
+          } else {
+            queryClient.invalidateQueries(path);
+          }
         }
 
         if (invalidatePaths) {
@@ -71,42 +88,20 @@ const Mutation = ({
   );
 };
 
-function build(config: IMutationConfig, operation: IOperationsMutations) {
-  return (overrideConfig?: Partial<IMutationConfig>) =>
+function build(config: IBuildMutation, operation: IOperationsMutations) {
+  return (overrideConfig?: Partial<IBuildMutation>) =>
     Mutation({ ...config, operation, ...overrideConfig });
 }
 
-export function buildMutation<T extends string>(
-  config: IBuildMutation<T>
-): IBuildMutationReturnType<T> {
+export function buildMutation(config: IBuildMutation) {
   const buildWithConfig = curry(build)(config);
 
-  const formattedPaths = [] as string[];
-
-  if (Array.isArray(config.path)) {
-    config.path.forEach((path) => {
-      const singularPath = path.replace(/s$/, "");
-
-      formattedPaths.push(singularPath);
-    });
-  } else {
-    const { path } = config;
-
-    const singularPath = path.replace(/s$/, "");
-
-    formattedPaths.push(singularPath);
-  }
-
-  const methods = {} as { [key: string]: any };
-
-  formattedPaths.forEach((path) => {
-    methods[camelCase(`create ${path} mutation`)] = buildWithConfig("CREATE");
-    methods[camelCase(`update ${path} mutation`)] = buildWithConfig("UPDATE");
-    methods[camelCase(`replace ${path} mutation`)] = buildWithConfig("REPLACE");
-    methods[camelCase(`delete ${path} mutation`)] = buildWithConfig("DELETE");
-  });
-
-  return methods;
+  return {
+    createMutation: buildWithConfig("CREATE"),
+    updateMutation: buildWithConfig("UPDATE"),
+    replaceMutation: buildWithConfig("REPLACE"),
+    deleteMutation: buildWithConfig("DELETE"),
+  };
 }
 
 function getMethodFromOperation(operation: IOperationsMutations) {

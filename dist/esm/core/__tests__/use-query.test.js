@@ -15,37 +15,46 @@ import { buildQuery } from "../queries";
 import { wrapper } from "./utils";
 const mock = new MockAdapter(axios);
 mock.onGet("/users").reply(200, [{ id: 1, name: "John Smith" }]);
+mock.onGet("/users/2").reply(200, { id: 2, name: "John Smith" });
 mock.onGet("/users", { params: { page: 1 } }).reply(200);
 mock.onGet("/users/vehicles").reply(200);
 mock.onGet("/users/vehicles", { params: { page: 1 } }).reply(200);
-const getUsersQuery = buildQuery({ path: "users" });
+const getReadUserQuery = buildQuery({ path: ["users", "[id]"] });
+const getListUsersQuery = buildQuery({ path: ["users"] });
 describe("useQuery", () => {
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
         mock.restore();
         yield AsyncStorage.removeItem("testKey");
     }));
     it("should fetch GET /users", () => __awaiter(void 0, void 0, void 0, function* () {
-        const { result, waitFor } = renderHook(() => getUsersQuery(), { wrapper });
+        const { result, waitFor } = renderHook(() => getListUsersQuery(), {
+            wrapper,
+        });
         yield waitFor(() => result.current.isSuccess);
         expect(result.current.data).toEqual([{ id: 1, name: "John Smith" }]);
     }));
+    it("should fetch GET /users/1", () => __awaiter(void 0, void 0, void 0, function* () {
+        const { result, waitFor } = renderHook(() => getReadUserQuery({ query: { id: 2 } }), { wrapper });
+        yield waitFor(() => result.current.isSuccess);
+        expect(result.current.data).toEqual({ id: 2, name: "John Smith" });
+    }));
     it("should fetch GET /users with ?page=1", () => __awaiter(void 0, void 0, void 0, function* () {
-        const { result, waitFor } = renderHook(() => getUsersQuery({ params: { page: 1 } }), { wrapper });
+        const { result, waitFor } = renderHook(() => getListUsersQuery({ params: { page: 1 } }), { wrapper });
         yield waitFor(() => result.current.isSuccess);
         expect(result.current.isSuccess).toEqual(true);
     }));
     it("should fetch GET /users/vehicles", () => __awaiter(void 0, void 0, void 0, function* () {
-        const { result, waitFor } = renderHook(() => getUsersQuery({ appendToUrl: "vehicles" }), { wrapper });
+        const { result, waitFor } = renderHook(() => getListUsersQuery({ appendToUrl: "/vehicles" }), { wrapper });
         yield waitFor(() => result.current.isSuccess);
         expect(result.current.isSuccess).toEqual(true);
     }));
     it("should fetch GET /users/vehicles with ?page=1", () => __awaiter(void 0, void 0, void 0, function* () {
-        const { result, waitFor } = renderHook(() => getUsersQuery({ appendToUrl: "vehicles", params: { page: 1 } }), { wrapper });
+        const { result, waitFor } = renderHook(() => getListUsersQuery({ appendToUrl: "/vehicles", params: { page: 1 } }), { wrapper });
         yield waitFor(() => result.current.isSuccess);
         expect(result.current.isSuccess).toEqual(true);
     }));
     it("should fetch GET /users and cache the response", () => __awaiter(void 0, void 0, void 0, function* () {
-        const { result, waitFor } = renderHook(() => getUsersQuery({
+        const { result, waitFor } = renderHook(() => getListUsersQuery({
             cacheResponse: { key: "testKey" },
         }), { wrapper });
         yield waitFor(() => result.current.isSuccess);

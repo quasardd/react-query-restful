@@ -6,7 +6,7 @@ import React, {
 } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import Axios from "axios";
-import { IRestContext, IRestClientProviderProps } from "./types";
+import { IRestContext, IRestClientProviderProps, IBuildUrl } from "./types";
 
 const RestContext = createContext({} as IRestContext);
 
@@ -66,8 +66,13 @@ export const RestClientProvider: React.FC<
 
 export const useRestContext = () => useContext(RestContext);
 
-export function buildUrl(path: string[] | string, append?: string | number) {
+export function buildUrl({ path, append, query }: IBuildUrl) {
   let paths = Array.isArray(path) ? path.join("/") : path;
+
+  if (query) {
+    // Replace the wildcards present in the path with the query values, ex: /users/[id] -> /users/1
+    paths = paths.replace(/\[([^\]]+)]/g, (match, key) => query[key] || match);
+  }
 
   // Remove leading slash if present
   if (paths.charAt(0) === "/") {
@@ -75,11 +80,16 @@ export function buildUrl(path: string[] | string, append?: string | number) {
   }
 
   if (append) {
-    paths = `${paths}/${append}`;
+    paths = `${paths}${append}`;
   }
 
   // Remove any double slashs from paths
   paths = paths.replace(/\/\//g, "/");
 
   return paths;
+}
+
+// A wildcard contains a [id] or [slug] or [whatever]
+export function isStringAWildcard(str: string) {
+  return str.startsWith("[") && str.endsWith("]");
 }

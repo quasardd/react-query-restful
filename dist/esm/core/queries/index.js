@@ -10,13 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery } from "react-query";
 import { buildUrl, useRestContext } from "..";
-const Query = ({ params, appendToUrl, path, options, cacheResponse, }) => {
+const Query = ({ params, appendToUrl, path, options, cacheResponse, query, }) => {
     const { axios } = useRestContext();
-    return useQuery(Object.assign({ queryKey: [buildUrl(path), appendToUrl, params], queryFn: () => __awaiter(void 0, void 0, void 0, function* () {
+    return useQuery(Object.assign({ queryKey: [path, query, appendToUrl, params], queryFn: () => __awaiter(void 0, void 0, void 0, function* () {
             const response = yield axios.request({
                 method: "GET",
                 params,
-                url: buildUrl(path, appendToUrl),
+                url: buildUrl({ path, query, append: appendToUrl }),
             });
             if (cacheResponse) {
                 yield AsyncStorage.setItem(cacheResponse.key, JSON.stringify(response.data));

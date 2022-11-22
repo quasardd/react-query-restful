@@ -9,16 +9,17 @@ const Query = ({
   path,
   options,
   cacheResponse,
+  query,
 }: IQuery) => {
   const { axios } = useRestContext();
 
   return useQuery<any>({
-    queryKey: [buildUrl(path), appendToUrl, params],
+    queryKey: [path, query, appendToUrl, params],
     queryFn: async () => {
       const response = await axios.request({
         method: "GET",
         params,
-        url: buildUrl(path, appendToUrl),
+        url: buildUrl({ path, query, append: appendToUrl }),
       });
 
       if (cacheResponse) {

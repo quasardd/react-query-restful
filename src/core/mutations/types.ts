@@ -1,22 +1,25 @@
+/* eslint-disable no-use-before-define */
 import { AxiosInstance } from "axios";
-import { UseMutationOptions, UseMutationResult } from "react-query";
-import type { PascalCase } from "type-fest";
+import { UseMutationOptions } from "react-query";
 
 export type IOperationsMutations = "CREATE" | "UPDATE" | "REPLACE" | "DELETE";
+
 export type MutationFnOverrides = {
   create?: (api: AxiosInstance, variables?: IMutationData) => Promise<any>;
   update?: (api: AxiosInstance, variables?: IMutationData) => Promise<any>;
   replace?: (api: AxiosInstance, variables?: IMutationData) => Promise<any>;
   delete?: (api: AxiosInstance, variables?: IMutationData) => Promise<any>;
 };
+
 export type Overrides = {
   mutationFnOverrides?: MutationFnOverrides;
 };
 
-export interface IMutationData {
-  data?: { [key: string]: any };
-  appendToUrl?: string | number;
-}
+export type IMutationData =
+  | (Pick<IMutation, "appendToUrl" | "query"> & {
+      data?: { [key: string]: any };
+    })
+  | void;
 
 export interface IMutation {
   path: string | string[];
@@ -25,28 +28,12 @@ export interface IMutation {
   cacheResponse?: {
     key: string;
   };
-  options?: Omit<
-    UseMutationOptions<any, unknown, IMutationData | void>,
-    "mutationFn"
-  >;
+  options?: Omit<UseMutationOptions<any, unknown, IMutationData>, "mutationFn">;
   overrides?: Overrides;
+  query?: {
+    [key: string]: any;
+  };
+  appendToUrl?: string | number;
 }
 
-export type IMutationConfig = Omit<IMutation, "operation">;
-
-export interface IBuildMutation<T>
-  extends Omit<IMutation, "path" | "operation"> {
-  path: T[] | T;
-}
-
-type ISingular<T extends string> = T extends `${infer Front}s`
-  ? PascalCase<Front>
-  : PascalCase<T>;
-
-type IMutationFn = (
-  overrideConfig?: Partial<IMutationConfig>
-) => UseMutationResult<any, unknown, IMutationData | void>;
-
-export type IBuildMutationReturnType<Path extends string> = {
-  [K in IOperationsMutations as `${Lowercase<IOperationsMutations>}${ISingular<Path>}Mutation`]: IMutationFn;
-};
+export interface IBuildMutation extends Omit<IMutation, "operation"> {}

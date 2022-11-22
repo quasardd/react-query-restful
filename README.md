@@ -51,7 +51,7 @@ function Example() {
 
   // OR GET http://localhost:3000/api/users/1/vehicles?page=1
   /* const { isLoading, error, data } = getUsersQuery({
-    appendToUrl: "1/vehicles",
+    appendToUrl: "/1/vehicles",
     params: {
       page: 1,
     },
@@ -79,16 +79,16 @@ function Example() {
 
 ## Mutation usage
 
-The `buildMutation` method will return a few functions, the name will be based on the informed paths.
+The `buildMutation` method will return a few functions, each one representing a different HTTP method.
 
-Example, the path `users` will generate the following functions:
+Example:
 
-- `createUserMutation` (for POST request)
-- `updateUserMutation` (for PATCH request)
-- `deleteUserMutation` (for DELETE request)
-- `replaceUserMutation` (for PUT request)
+- `createMutation` (for POST request)
+- `updateMutation` (for PATCH request)
+- `deleteMutation` (for DELETE request)
+- `replaceMutation` (for PUT request)
 
-All will share the same path & configuration. 
+All will share the same path & configuration.
 
 > NOTE: The mutation prefix (`create update delete replace`) are only references to the http method.
 
@@ -96,20 +96,20 @@ All will share the same path & configuration.
 import { buildMutation } from "react-query-restful";
 
 export const {
-  createUserMutation,
-  updateUserMutation,
-  deleteUserMutation,
-  replaceUserMutation,
+  createMutation,
+  updateMutation,
+  deleteMutation,
+  replaceMutation,
 } = buildMutation({
   path: "users",
 });
 
 /** You don't need to destruct all of them, it can also be done like so
- * export const { createUserMutation } = buildMutation({ path: 'users' });
-*/
+ * export const { createMutation } = buildMutation({ path: 'users' });
+ */
 
 function Example() {
-  const createUser = createUserMutation();
+  const createUser = createMutation();
 
   /* OR
   const createUser = createUserMutation({
@@ -138,7 +138,7 @@ function Example() {
      * }
      */
     await createUser.mutateAsync({
-      appendToUrl: "1/vehicles",
+      appendToUrl: "/1/vehicles",
       data: {
         plate: "XXXXX",
       },
@@ -150,6 +150,32 @@ function Example() {
       <h1>Hello there!</h1>
     </div>
   );
+}
+```
+
+## Wildcards
+
+When building a mutation or a query, you can use wildcards in the path.
+The wildcart must be surrounded by square brackets ([]) and the name of the wildcard must be the same as the name of the query property.
+
+```tsx
+import { buildQuery } from "react-query-restful";
+
+export const getUserQuery = buildQuery({ path: "users/[id]" });
+export const { createMutation: createUserMutation } = buildMutation({ path: "users/[id]" });
+
+function Example() {
+  // GET http://localhost:3000/api/users/1
+  const { isLoading, error, data } = getUserQuery({
+    query: {
+      id: 1,
+    },
+  });
+
+  // POST http://localhost:3000/api/users/1
+  const { mutateAsync } = createUserMutation({ query: { id: 1 } });
+
+  {...}
 }
 ```
 
@@ -168,7 +194,7 @@ export const { createSignInMutation } = createMutation({
 });
 ```
 
-Assuming that the response contains the user data with the `accessToken` property, you can use the `getSimpleJwtAuth` function to set the `Authorization` header with the `Bearer` prefix. You must specify the `key` where it's stored in the cache, and the `path` until the token. 
+Assuming that the response contains the user data with the `accessToken` property, you can use the `getSimpleJwtAuth` function to set the `Authorization` header with the `Bearer` prefix. You must specify the `key` where it's stored in the cache, and the `path` until the token.
 
 > This is just a shorthand and is not required.
 
@@ -225,44 +251,47 @@ Mutations are automatically invalidating the queries that shared the same path, 
 
 ## Mutation properties
 
-| Property        | Description                                                                                      | Required |
-| --------------- | ------------------------------------------------------------------------------------------------ | :------: |
-| `path`          | A string or a array of string that will be appended to the baseUrl.                              | true     |
-|`invalidatePaths`| A array of strings that will be used to invalidate the queries after a successful mutation call. | false    |
-| `cacheResponse` | A object with the key that will be used to cache the response.                                   | false    |
-| `options`       | A object with the options from react-query.                                                      | false    |
+| Property          | Description                                                                                      | Required |
+| ----------------- | ------------------------------------------------------------------------------------------------ | :------: |
+| `path`            | A string or a array of string that will be appended to the baseUrl.                              |   true   |
+| `invalidatePaths` | A array of strings that will be used to invalidate the queries after a successful mutation call. |  false   |
+| `cacheResponse`   | A object with the key that will be used to cache the response.                                   |  false   |
+| `options`         | A object with the options from react-query.                                                      |  false   |
+| `appendToUrl`     | A string that will be appended to the baseUrl.                                                   |  false   |
 
 When calling the result of the build at component level, you can pass again theses properties, but all now will be optional.
 
 And when calling the methods `mutateAsync` or `mutate` from mutation, you can pass the following properties:
 
-| Property    | Description                                            | Required |
-| ----------- | ------------------------------------------------------ | :------: |
-| `data`      | A object with the data to be sent in the request body. | false    |
-|`appendToUrl`| A string that will be appended to the baseUrl.         | false    |
+| Property      | Description                                            | Required |
+| ------------- | ------------------------------------------------------ | :------: |
+| `data`        | A object with the data to be sent in the request body. |  false   |
+| `appendToUrl` | A string that will be appended to the baseUrl.         |  false   |
+| `query`       | A object that will fulfill the wildcards.              |  false   |
 
 ## Query properties
 
-| Property        | Description                                                                                      | Required |
-| --------------- | ------------------------------------------------------------------------------------------------ | :------: |
-| `path`          | A string or a array of string that will be appended to the baseUrl.                              | true     |
-|`invalidatePaths`| A array of strings that will be used to invalidate the queries after a successful mutation call. | false    |
-| `cacheResponse` | A object with the key that will be used to cache the response.                                   | false    |
-| `options`       | A object with the options from react-query.                                                      | false    |
-| `appendToUrl`   | A string that will be appended to the baseUrl.                                                   | false    |
-| `params`        | A object with the params that will be appended to the url.                                       | false    |
+| Property          | Description                                                                                      | Required |
+| ----------------- | ------------------------------------------------------------------------------------------------ | :------: |
+| `path`            | A string or a array of string that will be appended to the baseUrl.                              |   true   |
+| `invalidatePaths` | A array of strings that will be used to invalidate the queries after a successful mutation call. |  false   |
+| `cacheResponse`   | A object with the key that will be used to cache the response.                                   |  false   |
+| `options`         | A object with the options from react-query.                                                      |  false   |
+| `appendToUrl`     | A string that will be appended to the baseUrl.                                                   |  false   |
+| `params`          | A object with the params that will be appended to the url.                                       |  false   |
+| `query`           | A object that will fulfill the wildcards.                                                        |  false   |
 
 When calling the result of the build at component level, you can pass again theses properties, but all now will be optional.
 
 ## Provider properties
 
-| Property         | Description                                                      | Required |
-| ---------------- | ---------------------------------------------------------------- | :------: |
-| `baseUrl`        | A string with the base url.                                      | true     |
-| `axiosConfig`    | A object with the axios config.                                  | false    |
-| `clientConfig`   | A object with the React-Query Client config.                     | false    |
-|`autoInvalidation`| A boolean that will enable or disable auto invalidation.         | false    |
-| `interceptors`   | A object with a few interceptors that will be attached to axios. | false    |
+| Property           | Description                                                      | Required |
+| ------------------ | ---------------------------------------------------------------- | :------: |
+| `baseUrl`          | A string with the base url.                                      |   true   |
+| `axiosConfig`      | A object with the axios config.                                  |  false   |
+| `clientConfig`     | A object with the React-Query Client config.                     |  false   |
+| `autoInvalidation` | A boolean that will enable or disable auto invalidation.         |  false   |
+| `interceptors`     | A object with a few interceptors that will be attached to axios. |  false   |
 
 ## Running the tests
 
@@ -280,8 +309,6 @@ Feel free to submit a PR.
 - **[Marcel P Goes](https://github.com/glothos)**
 
 See also the list of [contributors](https://github.com/quasardd/react-query-restful/graphs/contributors) who participated in this project.
-
-Thanks to [Anurag Hazra](https://github.com/anuraghazra) for the TypeScript magic =).
 
 ## License
 

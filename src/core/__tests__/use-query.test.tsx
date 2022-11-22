@@ -8,11 +8,13 @@ import { wrapper } from "./utils";
 const mock = new MockAdapter(axios);
 
 mock.onGet("/users").reply(200, [{ id: 1, name: "John Smith" }]);
+mock.onGet("/users/2").reply(200, { id: 2, name: "John Smith" });
 mock.onGet("/users", { params: { page: 1 } }).reply(200);
 mock.onGet("/users/vehicles").reply(200);
 mock.onGet("/users/vehicles", { params: { page: 1 } }).reply(200);
 
-const getUsersQuery = buildQuery({ path: "users" });
+const getReadUserQuery = buildQuery({ path: ["users", "[id]"] });
+const getListUsersQuery = buildQuery({ path: ["users"] });
 
 describe("useQuery", () => {
   afterAll(async () => {
@@ -21,16 +23,29 @@ describe("useQuery", () => {
   });
 
   it("should fetch GET /users", async () => {
-    const { result, waitFor } = renderHook(() => getUsersQuery(), { wrapper });
+    const { result, waitFor } = renderHook(() => getListUsersQuery(), {
+      wrapper,
+    });
 
     await waitFor(() => result.current.isSuccess);
 
     expect(result.current.data).toEqual([{ id: 1, name: "John Smith" }]);
   });
 
+  it("should fetch GET /users/2", async () => {
+    const { result, waitFor } = renderHook(
+      () => getReadUserQuery({ query: { id: 2 } }),
+      { wrapper }
+    );
+
+    await waitFor(() => result.current.isSuccess);
+
+    expect(result.current.data).toEqual({ id: 2, name: "John Smith" });
+  });
+
   it("should fetch GET /users with ?page=1", async () => {
     const { result, waitFor } = renderHook(
-      () => getUsersQuery({ params: { page: 1 } }),
+      () => getListUsersQuery({ params: { page: 1 } }),
       { wrapper }
     );
 
@@ -41,7 +56,7 @@ describe("useQuery", () => {
 
   it("should fetch GET /users/vehicles", async () => {
     const { result, waitFor } = renderHook(
-      () => getUsersQuery({ appendToUrl: "vehicles" }),
+      () => getListUsersQuery({ appendToUrl: "/vehicles" }),
       { wrapper }
     );
 
@@ -52,7 +67,8 @@ describe("useQuery", () => {
 
   it("should fetch GET /users/vehicles with ?page=1", async () => {
     const { result, waitFor } = renderHook(
-      () => getUsersQuery({ appendToUrl: "vehicles", params: { page: 1 } }),
+      () =>
+        getListUsersQuery({ appendToUrl: "/vehicles", params: { page: 1 } }),
       { wrapper }
     );
 
@@ -64,7 +80,7 @@ describe("useQuery", () => {
   it("should fetch GET /users and cache the response", async () => {
     const { result, waitFor } = renderHook(
       () =>
-        getUsersQuery({
+        getListUsersQuery({
           cacheResponse: { key: "testKey" },
         }),
       { wrapper }

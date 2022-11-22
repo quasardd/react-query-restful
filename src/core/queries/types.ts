@@ -8,4 +8,7 @@ export interface IQuery {
   cacheResponse?: {
     key: string;
   };
+  query?: {
+    [key: string]: any;
+  };
 }

@@ -16,13 +16,13 @@ exports.buildQuery = void 0;
 const async_storage_1 = __importDefault(require("@react-native-async-storage/async-storage"));
 const react_query_1 = require("react-query");
 const __1 = require("..");
-const Query = ({ params, appendToUrl, path, options, cacheResponse, }) => {
+const Query = ({ params, appendToUrl, path, options, cacheResponse, query, }) => {
     const { axios } = (0, __1.useRestContext)();
-    return (0, react_query_1.useQuery)(Object.assign({ queryKey: [(0, __1.buildUrl)(path), appendToUrl, params], queryFn: () => __awaiter(void 0, void 0, void 0, function* () {
+    return (0, react_query_1.useQuery)(Object.assign({ queryKey: [path, query, appendToUrl, params], queryFn: () => __awaiter(void 0, void 0, void 0, function* () {
             const response = yield axios.request({
                 method: "GET",
                 params,
-                url: (0, __1.buildUrl)(path, appendToUrl),
+                url: (0, __1.buildUrl)({ path, query, append: appendToUrl }),
             });
             if (cacheResponse) {
                 yield async_storage_1.default.setItem(cacheResponse.key, JSON.stringify(response.data));
