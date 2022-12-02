@@ -1,4 +1,4 @@
-import { UseQueryOptions } from "react-query";
+import { QueryKey, UseQueryOptions } from "react-query";
 
 export interface IQuery {
   path: string | string[];
@@ -11,4 +11,5 @@ export interface IQuery {
   query?: {
     [key: string]: any;
   };
+  queryKey?: QueryKey;
 }
