@@ -1,40 +1,49 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useQuery } from "react-query";
+import { QueryKey, useQuery, UseQueryResult } from "react-query";
 import { buildUrl, useRestContext } from "..";
 import { IQuery } from "./types";
 
-const Query = ({
+const Query = <TQueryFnData, TError>({
   params,
   appendToUrl,
   path,
   options,
   cacheResponse,
   query,
-}: IQuery) => {
+  queryKey,
+}: IQuery): UseQueryResult<TQueryFnData, TError> & { queryKey: QueryKey } => {
   const { axios } = useRestContext();
 
-  return useQuery<any>({
-    queryKey: [path, query, appendToUrl, params],
-    queryFn: async () => {
-      const response = await axios.request({
-        method: "GET",
-        params,
-        url: buildUrl({ path, query, append: appendToUrl }),
-      });
+  const key = queryKey ?? [path, query, appendToUrl, params];
 
-      if (cacheResponse) {
-        await AsyncStorage.setItem(
-          cacheResponse.key,
-          JSON.stringify(response.data)
-        );
-      }
+  return {
+    queryKey: key,
+    ...useQuery({
+      queryKey: key,
+      queryFn: async () => {
+        const response = await axios.request({
+          method: "GET",
+          params,
+          url: buildUrl({ path, query, append: appendToUrl }),
+        });
 
-      return response.data;
-    },
-    ...options,
-  });
+        if (cacheResponse) {
+          await AsyncStorage.setItem(
+            cacheResponse.key,
+            JSON.stringify(response.data)
+          );
+        }
+
+        return response.data;
+      },
+      ...(options as any),
+    }),
+  };
 };
 
-export function buildQuery(config: Omit<IQuery, "params" | "id">) {
-  return (data?: Partial<IQuery>) => Query({ ...config, ...data });
+export function buildQuery<TQueryFnData = any, TError = unknown>(
+  config: Omit<IQuery, "params" | "id">
+) {
+  return (data?: Partial<IQuery>) =>
+    Query<TQueryFnData, TError>({ ...config, ...data });
 }
